@@ -9,4 +9,4 @@
 #SBATCH --array=0-27
 
 
-python3 /nfs/home/students/l.hafner/fopra/runtime/runtime_benchmark.py ${1} ${SLURM_ARRAY_TASK_ID}
+python3 runtime_benchmark.py ${1} ${SLURM_ARRAY_TASK_ID}
