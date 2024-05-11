@@ -259,4 +259,11 @@ tags
 # Persistent undo
 [._]*.un~
 
-runner/
+# Nextflow specifc endings
+.nextflow*
+work/
+data/
+results/
+testing/
+testing*
+*.pyc
