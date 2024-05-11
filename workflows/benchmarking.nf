@@ -1,5 +1,6 @@
 include { RUNTIME } from '../subworkflows/runtime'
 include { STATIC_PLOTS } from '../subworkflows/static_plots'
+include { CORRELATION } from '../subworkflows/correlation'
 
 
 workflow BENCHMARKING {
@@ -12,6 +13,10 @@ workflow BENCHMARKING {
 
         static_plots_enabled
 
+        correlation_enabled
+        correlation_n_runs
+        correlation_n_genes
+        
     main:
         if (runtime_enabled) {
             RUNTIME(
@@ -24,6 +29,13 @@ workflow BENCHMARKING {
         
         if (static_plots_enabled) {
             STATIC_PLOTS()
+        }
+
+        if (correlation_enabled) {
+            CORRELATION(
+                correlation_n_runs,
+                correlation_n_genes,
+            )
         }
         
 }

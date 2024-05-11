@@ -10,5 +10,9 @@ workflow {
         params.runtime.preprocessing_threshold,
 
         params.static_plots.enabled,
+
+        params.correlation.enabled,
+        params.correlation.n_runs,
+        params.correlation.n_genes,
     )
 }
