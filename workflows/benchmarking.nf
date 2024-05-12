@@ -2,11 +2,13 @@ include { RUNTIME } from '../subworkflows/runtime'
 include { STATIC_PLOTS } from '../subworkflows/static_plots'
 include { CORRELATION } from '../subworkflows/correlation'
 include { NEGATIVE } from '../subworkflows/negative'
+include { PERFORMANCE } from '../subworkflows/performance'
 
 
 workflow BENCHMARKING {
     take:
         kang
+        reactome
         
         runtime_enabled
         runtime_n_runs
@@ -23,6 +25,12 @@ workflow BENCHMARKING {
         negative_enabled
         negative_n_genes
         negative_preprocessing_threshold
+
+        performance_enabled
+        performance_n_runs
+        performance_n_genes
+        performance_hvg_ratio
+        performance_preprocessing_threshold
         
     main:
         if (runtime_enabled) {
@@ -50,6 +58,17 @@ workflow BENCHMARKING {
                 kang,
                 negative_n_genes,
                 negative_preprocessing_threshold,
+            )
+        }
+
+        if (performance_enabled) {
+            PERFORMANCE(
+                kang,
+                reactome,
+                performance_n_runs,
+                performance_n_genes,
+                performance_hvg_ratio,
+                performance_preprocessing_threshold,
             )
         }
         

@@ -12,7 +12,7 @@ process PERMUTATION_TEST {
     script:
     meta = meta + [method: 'permutation-test']
     """
-    permutation.py \
+    permutation_test.py \
         --input ${input_anndata} \
         --output ${meta.scenario}_permutation-test_${meta.run}.tsv \
         -n 10000 \

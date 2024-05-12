@@ -4,6 +4,7 @@ include { BENCHMARKING } from './workflows/benchmarking'
 workflow {
     BENCHMARKING(
         params.kang,
+        params.reactome,
         
         params.runtime.enabled,
         params.runtime.n_runs,
@@ -20,5 +21,11 @@ workflow {
         params.negative.enabled,
         params.negative.n_genes,
         params.negative.preprocessing_threshold,
+
+        params.performance.enabled,
+        params.performance.n_runs,
+        params.performance.n_genes,
+        params.performance.hvg_ratio,
+        params.performance.preprocessing_threshold,
     )
 }
