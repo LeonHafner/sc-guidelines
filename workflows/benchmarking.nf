@@ -1,10 +1,13 @@
 include { RUNTIME } from '../subworkflows/runtime'
 include { STATIC_PLOTS } from '../subworkflows/static_plots'
 include { CORRELATION } from '../subworkflows/correlation'
+include { NEGATIVE } from '../subworkflows/negative'
 
 
 workflow BENCHMARKING {
     take:
+        kang
+        
         runtime_enabled
         runtime_n_runs
         runtime_n_fixed_cells
@@ -16,6 +19,10 @@ workflow BENCHMARKING {
         correlation_enabled
         correlation_n_runs
         correlation_n_genes
+
+        negative_enabled
+        negative_n_genes
+        negative_preprocessing_threshold
         
     main:
         if (runtime_enabled) {
@@ -35,6 +42,14 @@ workflow BENCHMARKING {
             CORRELATION(
                 correlation_n_runs,
                 correlation_n_genes,
+            )
+        }
+
+        if (negative_enabled) {
+            NEGATIVE(
+                kang,
+                negative_n_genes,
+                negative_preprocessing_threshold,
             )
         }
         
