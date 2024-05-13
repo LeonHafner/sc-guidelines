@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import pandas as pd
+from math import ceil
 import numpy as np
 import scanpy as sc
 import scvi
@@ -52,10 +53,10 @@ model = scvi.model.SCVI(adata)
 
 # Update batch size based on this issue: https://github.com/scverse/scvi-tools/issues/2214
 batch_size = 128
-while adata.n_obs % batch_size == 1:
+while ceil(adata.n_obs * 0.9) % batch_size == 1:
     batch_size += 1
     print(f'Updating batch size to {batch_size}')
-
+print(f'Using batch size of {batch_size}')
 
 model.train(batch_size=batch_size)
 
