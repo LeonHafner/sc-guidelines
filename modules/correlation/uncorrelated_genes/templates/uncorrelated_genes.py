@@ -5,6 +5,8 @@ from scipy.stats import spearmanr
 from tqdm import tqdm
 import random
 
+random.seed(int("${meta.run}"))
+
 adata = sc.read("${anndata}")
 adata_final = adata.copy()
 

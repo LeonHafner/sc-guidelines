@@ -16,7 +16,8 @@ process SIMULATION {
     runtime-simulation.R \
         simulation.h5ad \
         ${meta.n_genes} \
-        ${meta.n_cells}
+        ${meta.n_cells} \
+        ${meta.run}
     END=\$( date +%s )
     echo \$((\$END-\$START)) > time.txt
     """

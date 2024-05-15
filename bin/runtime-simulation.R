@@ -293,6 +293,9 @@ args <- commandArgs(trailingOnly = TRUE)
 output <- args[1]
 nGenes <- as.integer(args[2])
 nCells <- as.integer(args[3])
+seed <- as.integer(args[4])
+
+set.seed(seed)
 
 vcf <- mockVCF(n.samples = 10)
 

@@ -15,7 +15,8 @@ process SIMULATION {
     simulation.R \
         --scenario ${meta.scenario} \
         --n_genes ${n_genes} \
-        --output ${meta.scenario}_${meta.run}.h5ad
+        --output ${meta.scenario}_${meta.run}.h5ad \
+        --seed ${meta.run}
     """
 
     stub:

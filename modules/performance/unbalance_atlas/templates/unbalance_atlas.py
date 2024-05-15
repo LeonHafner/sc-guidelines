@@ -4,6 +4,7 @@ import scanpy as sc
 import numpy as np
 import random
 
+random.seed(int("${meta.run}"))
 
 file_in = "${input_anndata}"
 file_out = "${meta.scenario}_${meta.run}.h5ad"

@@ -14,12 +14,16 @@ p <- arg_parser("Simulation Script")
 p <- add_argument(p, "--output", help = "path for output h5ad")
 p <- add_argument(p, "--scenario", help = "simulation scenario, can be 'atlas', 'dataset' and 'paired'")
 p <- add_argument(p, "--n_genes", help = "number of genes to simulate", type = "integer", default = 5000)
+p <- add_argument(p, "--seed", help = "Seed for random processes", type = "integer")
 
 argv <- parse_args(p)
 
 output <- argv$output
 scenario <- argv$scenario
 n_genes <- argv$n_genes
+seed <- argv$seed
+
+set.seed(seed)
 
 splimpSimulate <- function(vcf = mockVCF(n.samples = 20), params = newSplatPopParams(), balancedBatches = TRUE) {
   batch.size <- getParam(params, 'batch.size')

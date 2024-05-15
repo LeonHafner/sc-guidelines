@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
    
 import scanpy as sc
+import numpy as np
+
+np.random.seed(0)
 
 ad = sc.read_h5ad("${input_anndata}")
 

@@ -7,6 +7,7 @@ from anndata import AnnData
 from tqdm import tqdm
 import numpy as np
 
+np.random.seed(0)
 
 parser = argparse.ArgumentParser(
                     prog='Permutation Approach',
