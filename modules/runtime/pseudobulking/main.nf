@@ -4,16 +4,16 @@ process PSEUDOBULKING {
     container 'leonhafner/python'
 
     input:
-    tuple val(meta), path(sc_anndata)
+    tuple val(meta), path(anndata)
 
     output:
-    tuple val(meta), path(sc_anndata), path('pseudobulked.h5ad'), path('time.txt')
+    tuple val(meta), path('pseudobulked.h5ad'), path('time.txt')
 
     script:
     """
     START=\$( date +%s )
     pseudobulking.py \
-        --input ${sc_anndata} \
+        --input ${anndata} \
         --output pseudobulked.h5ad \
         --scenario dataset
     END=\$( date +%s )

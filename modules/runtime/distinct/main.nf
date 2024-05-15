@@ -4,16 +4,16 @@ process DISTINCT {
     container 'leonhafner/distinct'
 
     input:
-    tuple val(meta), path(sc_anndata), path(pb_anndata)
+    tuple val(meta), path(anndata)
 
     output:
-    tuple val(meta), path(sc_anndata), path(pb_anndata), path('time.txt')
+    tuple val(meta), path('time.txt')
 
     script:
     """
     START=\$( date +%s )
     distinct.R \
-        --input ${sc_anndata} \
+        --input ${anndata} \
         --output results.tsv \
         --scenario dataset
     END=\$( date +%s )

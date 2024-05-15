@@ -4,16 +4,16 @@ process HIERARCHICAL_BOOTSTRAPPING {
     container 'leonhafner/python'
 
     input:
-    tuple val(meta), path(sc_anndata), path(pb_anndata)
+    tuple val(meta), path(anndata)
 
     output:
-    tuple val(meta), path(sc_anndata), path(pb_anndata), path('time.txt')
+    tuple val(meta), path('time.txt')
 
     script:
     """
     START=\$( date +%s )
     hierarchical_bootstrapping.py \
-        --input ${sc_anndata} \
+        --input ${anndata} \
         --output1 results_pre.tsv \
         --output2 results.tsv \
         --scenario dataset
