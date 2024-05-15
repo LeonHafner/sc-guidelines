@@ -5,6 +5,8 @@ process SIMULATION {
 
     input:
     val meta
+    // Used for MAST error check
+    val preprocessing_threshold
 
     output:
     tuple val(meta), path("simulation.h5ad"), path("time.txt")
@@ -17,7 +19,8 @@ process SIMULATION {
         simulation.h5ad \
         ${meta.n_genes} \
         ${meta.n_cells} \
-        ${meta.run}
+        ${meta.run} \
+        ${preprocessing_threshold}
     END=\$( date +%s )
     echo \$((\$END-\$START)) > time.txt
     """

@@ -35,7 +35,7 @@ workflow RUNTIME {
 
         meta = ch_fixed_cells.mix(ch_fixed_genes)
 
-        SIMULATION(meta)
+        SIMULATION(meta, preprocessing_threshold)
 
         ch_out_simulation = SIMULATION.out
             .map{
