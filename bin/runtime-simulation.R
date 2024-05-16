@@ -355,11 +355,12 @@ errorMAST <- function(sim) {
 assignedParams <- assignParams()
 sim <- splimpSimulate(vcf = assignedParams$vcf, params = assignedParams$params)
 
-if (nGenes < 1000 | nCells < 1000)
+if (nGenes < 1000 | nCells < 1000) {
   while (errorMAST(sim)) {
     assignedParams <- assignParams()
     sim <- splimpSimulate(vcf = assignedParams$vcf, params = assignedParams$params)
   }
+}
 
 assays(sim)$BCV <- NULL
 assays(sim)$BaseCellMeans <- NULL
