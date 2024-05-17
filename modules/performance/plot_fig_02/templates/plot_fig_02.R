@@ -5,12 +5,6 @@ library(ggplot2)
 library(png)
 library(grid)
 
-# Download Fig02A
-png_url = "https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_02/Fig_2.png"
-drawio_url = "https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_02/Fig_2.drawio"
-
-download.file(png_url, destfile = "Fig_02A.png")
-download.file(drawio_url, destfile = "Fig_02A.drawio")
 
 input <- "${cell_counts}"
 

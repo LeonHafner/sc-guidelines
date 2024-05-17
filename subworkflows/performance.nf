@@ -111,10 +111,13 @@ workflow PERFORMANCE {
             .map{meta, path -> [path]}
             .collect()
             .map{path -> [[scenario: 'dataset-ub-cells'], path]}
+
+        ch_fig_02_png = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_02/Fig_2.png')
+        ch_fig_02_drawio = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_02/Fig_2.drawio')
                 
         PREPARE_FIG_02(ch_fig_02)
 
-        PLOT_FIG_02(PREPARE_FIG_02.out)
+        PLOT_FIG_02(PREPARE_FIG_02.out, ch_fig_02_png, ch_fig_02_drawio)
 
         // Filter for the scenarios needed for Fig_05, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
         ch_fig_05 = PRECISION_RECALL.out.auc
@@ -183,4 +186,4 @@ workflow PERFORMANCE {
             .map{key, meta, path -> [meta, path]}
         
         PLOT_FIG_S08(ch_fig_s08)
-    }
+}

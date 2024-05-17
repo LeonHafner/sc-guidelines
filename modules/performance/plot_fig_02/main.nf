@@ -5,6 +5,8 @@ process PLOT_FIG_02 {
 
     input:
     tuple val(meta), path(cell_counts)
+    path 'Fig_02A.png'
+    path 'Fig_02A.drawio'
 
     output:
     path 'Fig_02.png', emit: 'png1'
@@ -17,7 +19,5 @@ process PLOT_FIG_02 {
     stub:
     """
     touch Fig_02.png
-    touch Fig_02A.png
-    touch Fig_02A.drawio
     """
 }
