@@ -93,10 +93,10 @@ workflow PERFORMANCE {
                 HIERARCHICAL_BOOTSTRAPPING.out,
                 SCVI.out,
                 DREAM.out)
-            .map{item -> [item[0].scenario + '_' + item[0].run, [item[0], item[1]]]}
+            .map{meta, path -> [meta.scenario + '_' + meta.run, meta, path]}
             .groupTuple()
-            .map{item -> item[1]}
-        
+            .map{key, meta, path -> [meta, path]}
+
         PVALUES(ch_all_methods)
 
         // Cartesian product of the channels filtered by matching meta object and mapped to linear tuple [meta, path_pvalues, path_ground_truth]
@@ -105,73 +105,82 @@ workflow PERFORMANCE {
 
         PRECISION_RECALL(ch_meta_pval_groundtruth)
 
-        // Filter for scenario 'dataset-ub-cells', slice of meta object and enclose into tuple, collect and add single metadata back
+        // Filter for scenario 'dataset-ub-cells', remove meta object, collect and add new metadata back
         ch_fig_02 = PREPROCESSING.out
-            .filter{item -> item[0].scenario == 'dataset-ub-cells'}
-            .map{item -> [item[1]]}
+            .filter{meta, path -> meta.scenario == 'dataset-ub-cells'}
+            .map{meta, path -> [path]}
             .collect()
-            .map{item -> [[scenario: 'dataset-ub-cells'], item]}
-
+            .map{path -> [[scenario: 'dataset-ub-cells'], path]}
+                
         PREPARE_FIG_02(ch_fig_02)
 
         PLOT_FIG_02(PREPARE_FIG_02.out)
 
-        // Filter for the scenarios needed for Fig_07, enclose the items in single value tuples and collect them
+        // Filter for the scenarios needed for Fig_05, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
         ch_fig_05 = PRECISION_RECALL.out.auc
             .filter{item -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(item[0].scenario)}
-            .map{item -> [item]}
-            .collect()
+            .map{meta, path -> ["key", meta, path]}
+            .groupTuple()
+            .map{key, meta, path -> [meta, path]}
         
         PLOT_FIG_05(ch_fig_05)
 
         ch_fig_06 = PRECISION_RECALL.out.prc
-            .filter{item -> item[0].scenario == 'kang2018'}
+            .filter{meta, path -> meta.scenario == 'kang2018'}
     
         PLOT_FIG_06(ch_fig_06)
 
+        // Filter for the scenarios needed for Fig_S02, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
         ch_fig_s02 = PRECISION_RECALL.out.auc
             .filter{item -> ['atlas_hvg', 'dataset_hvg', 'atlas-ub-conditions_hvg', 'dataset-ub-cells_hvg'].contains(item[0].scenario)}
-            .map{item -> [item]}
-            .collect()
+            .map{meta, path -> ["key", meta, path]}
+            .groupTuple()
+            .map{key, meta, path -> [meta, path]}
     
         PLOT_FIG_S02(ch_fig_s02)
 
         // Filter prc files by scenario, map 'run' to first argument to group them by run and map them back attaching a new meta object and flattening the list of paths
         ch_fig_s03 = PRECISION_RECALL.out.prc
-            .filter{item -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(item[0].scenario)}
-            .map{item -> [item[0].run, [item[1]]]}
+            .filter{meta, path -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(meta.scenario)}
+            .map{meta, path -> [meta.run, [path]]}
             .groupTuple()
-            .map{item -> [[run: item[0]], item[1].flatten()]}
+            .map{run, paths -> [[run: run], paths.flatten()]}
 
         PLOT_FIG_S03(ch_fig_s03)
 
+        // Filter for the scenarios needed for Fig_S06, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
         ch_fig_s06 = PRECISION_RECALL.out.auc
-            .filter{item -> [
+            .filter{meta, path -> [
                 'atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells',
                 'atlas-less-de', 'dataset-less-de', 'atlas-ub-conditions-less-de', 'dataset-ub-cells-less-de'
-                ].contains(item[0].scenario)}
-            .map{item -> [item]}
-            .collect()
+                ].contains(meta.scenario)}
+            .map{meta, path -> ["key", meta, path]}
+            .groupTuple()
+            .map{key, meta, path -> [meta, path]}
 
         PLOT_FIG_S06(ch_fig_s06)
 
         ch_fig_s07_prc = PRECISION_RECALL.out.prc
-            .filter{item -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(item[0].scenario)}
-            .map{item -> [item[0].run, [item[1]]]}
+            .filter{meta, path -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(meta.scenario)}
+            .map{meta, path -> [meta.run, [path]]}
             .groupTuple()
-            .map{item -> [[run: item[0]], item[1].flatten()]}
+            .map{run, paths -> [[run: run], paths.flatten()]}
         
+        // Filter for scenario, introduce pseudokey, group to get list of meta and list of paths, remove pseudokey, collect to get value channel
         ch_fig_s07_auc = PRECISION_RECALL.out.auc
-            .filter{item -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(item[0].scenario)}
-            .map{item -> [item]}
+            .filter{meta, path -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(meta.scenario)}
+            .map{meta, path -> ["key", meta, path]}
+            .groupTuple()
+            .map{key, meta, path -> [meta, path]}
             .collect()
 
         PLOT_FIG_S07(ch_fig_s07_prc, ch_fig_s07_auc)
 
         ch_fig_s08 = PRECISION_RECALL.out.auc
-            .filter{item -> ['dataset-ub-cells', 'dataset-ub-cells_pb-fixed-effect'].contains(item[0].scenario)}
-            .map{item -> [item]}
-            .collect()
+            .filter{meta, path -> ['dataset-ub-cells', 'dataset-ub-cells_pb-fixed-effect'].contains(meta.scenario)}
+            .map{meta, path -> ["key", meta, path]}
+            .groupTuple()
+            .map{key, meta, path -> [meta, path]}
         
         PLOT_FIG_S08(ch_fig_s08)
     }

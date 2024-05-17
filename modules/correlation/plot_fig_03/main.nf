@@ -4,7 +4,7 @@ process PLOT_FIG_03 {
     publishDir "${params.output}", mode: 'copy'
 
     input:
-    val correlations
+    path correlations, stageAs: 'correlations/correlations_?.tsv'
 
     output:
     path 'Fig_03.png'

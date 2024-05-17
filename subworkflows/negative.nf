@@ -44,13 +44,16 @@ workflow NEGATIVE {
         DREAM(PSEUDOBULKING.out)
 
         // Mix all channels (except scvi), introduce grouping criterion 'scenario_run', group them by 'scenario_run' and remove the grouping criterion at the end
-        ch_all_methods = MAST.out.mix(DISTINCT.out, DESEQ2.out, PERMUTATION_TEST.out, HIERARCHICAL_BOOTSTRAPPING.out, DREAM.out)
-            .map{
-                item -> [item[0].scenario + '_' + item[0].run, [item[0], item[1]]]}
+        ch_all_methods = MAST.out
+            .mix(
+                DISTINCT.out,
+                DESEQ2.out,
+                PERMUTATION_TEST.out,
+                HIERARCHICAL_BOOTSTRAPPING.out,
+                DREAM.out)
+            .map{meta, path -> [meta.scenario + '_' + meta.run, meta, path]}
             .groupTuple()
-            .map{
-                item -> item[1]
-            }
+            .map{key, meta, path -> [meta, path]}
         
         PVALUES(ch_all_methods)
 
@@ -58,21 +61,17 @@ workflow NEGATIVE {
         
         // Combine all pvalues with scvi pvalues and group them by scenario and run
         ch_input_fpr_fps = PVALUES.out.concat(SCVI_PROCESSING.out)
-            .map{
-                item -> [item[0].scenario + '_' + item[0].run, [item[0],  item[1]]]
-                }
+            .map{meta, path -> [meta.scenario + '_' + meta.run, meta,  path]}
             .groupTuple()
-            .map{
-                item -> [item[1][0][0], item[1][0][1], item[1][1][1]]
-            }
-        
+            .map{key, metas, paths -> [metas[0], paths[0], paths[1]]}
+
         FPS_FPR(ch_input_fpr_fps)
 
-        PLOT_FIG_07(FPS_FPR.out.fpr.filter{item -> item[0].scenario == 'atlas-negative'})
+        PLOT_FIG_07(FPS_FPR.out.fpr.filter{meta, path -> meta.scenario == 'atlas-negative'})
 
         // Channel for kang and simulated scenario - use 'first' for stability in case more runs of these scenarios are added in later versions
-        ch_fig_s04_kang = FPS_FPR.out.fpr.filter{item -> item[0].scenario == 'kang2018'}.first()
-        ch_fig_s04_atlas_negative = FPS_FPR.out.fpr.filter{item -> item[0].scenario == 'atlas-negative'}.first()
+        ch_fig_s04_kang = FPS_FPR.out.fpr.filter{meta, path -> meta.scenario == 'kang2018'}.first()
+        ch_fig_s04_atlas_negative = FPS_FPR.out.fpr.filter{meta, path -> meta.scenario == 'atlas-negative'}.first()
 
         PLOT_FIG_S04(
             ch_fig_s04_kang,
@@ -80,8 +79,8 @@ workflow NEGATIVE {
             )
         
         // Channel for kang and simulated scenario - use 'first' for stability in case more runs of these scenarios are added in later versions
-        ch_fig_s05_kang = FPS_FPR.out.fps.filter{item -> item[0].scenario == 'kang2018'}.first()
-        ch_fig_s05_atlas_negative = FPS_FPR.out.fps.filter{item -> item[0].scenario == 'atlas-negative'}.first()
+        ch_fig_s05_kang = FPS_FPR.out.fps.filter{meta, path -> meta.scenario == 'kang2018'}.first()
+        ch_fig_s05_atlas_negative = FPS_FPR.out.fps.filter{meta, path -> meta.scenario == 'atlas-negative'}.first()
 
         PLOT_FIG_S05(
             ch_fig_s05_kang,

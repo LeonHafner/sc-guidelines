@@ -133,7 +133,7 @@ p <- plot_grid(
   rel_heights = c(1, 0.2)
 )
 
-ggsave(p, filename = "Fig_S07_run${meta.run}.png", width = 3606, height = 1950, units = "px", dpi = 400)
+ggsave(p, filename = "Fig_S07_run${meta_prc.run}.png", width = 3606, height = 1950, units = "px", dpi = 400)
 
 
 

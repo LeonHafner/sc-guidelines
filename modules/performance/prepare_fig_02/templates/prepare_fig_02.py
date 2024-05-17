@@ -9,7 +9,7 @@ def parse_path_string(paths_string):
     """
     Parse the path_string into a list of strings.
     """
-    return paths_string.strip('[]').split(', ')
+    return paths_string.split(' ')
 
 
 def write_list_to_file(file_path, my_list):
