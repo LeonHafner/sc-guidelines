@@ -8,6 +8,8 @@ suppressPackageStartupMessages({
   library(argparser)
 })
 
+set.seed(0)
+
 # Parse arguments
 p <- arg_parser("Distinct Script")
 

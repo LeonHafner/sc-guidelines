@@ -7,6 +7,7 @@ import scanpy as sc
 import scvi
 from tqdm import tqdm
 
+scvi.settings.seed = 0
 
 file_in = "${input_anndata}"
 scenario = "${meta.scenario}"
@@ -67,5 +68,5 @@ for cutoff in tqdm(np.linspace(0, 1, 2001)):
     de = model.differential_expression(
         groupby="Condition", group1=group1, group2=group2, fdr_target=round(cutoff, 4)
     )
-    de.sort_index().to_csv(f'result-{str(round(cutoff, 4)).replace(".", "_")}.tsv', sep = "\t")
+    de.sort_index().to_csv(f'result-{str(round(cutoff, 4)).replace(".", "_")}.tsv', sep = "\\t")
 

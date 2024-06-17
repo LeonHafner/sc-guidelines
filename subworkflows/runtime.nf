@@ -35,7 +35,7 @@ workflow RUNTIME {
 
         meta = ch_fixed_cells.mix(ch_fixed_genes)
 
-        SIMULATION(meta)
+        SIMULATION(meta, preprocessing_threshold)
 
         ch_out_simulation = SIMULATION.out
             .map{
@@ -55,68 +55,33 @@ workflow RUNTIME {
 
         ch_out_pseudobulking = PSEUDOBULKING.out
             .map{
-                meta, sc_anndata, pb_anndata, time_file ->
-                addRuntimeToMeta(meta, sc_anndata, pb_anndata, time_file, 'pseudobulking')
+                meta, anndata, time_file ->
+                addRuntimeToMeta(meta, anndata, time_file, 'pseudobulking')
             }
-                
-        MAST(ch_out_pseudobulking)
 
-        ch_out_mast = MAST.out
-            .map{
-                meta, sc_anndata, pb_anndata, time_file ->
-                addRuntimeToMeta(meta, sc_anndata, pb_anndata, time_file, 'mast')
-            }
+        MAST(ch_out_preprocessing)
+        DISTINCT(ch_out_preprocessing)
+        DESEQ2(ch_out_pseudobulking)
+        PERMUTATION_TEST(ch_out_pseudobulking)
+        HIERARCHICAL_BOOTSTRAPPING(ch_out_preprocessing)
+        SCVI(ch_out_preprocessing)
+        DREAM(ch_out_pseudobulking)
+
+        ch_out_mast = MAST.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'mast')}
+        ch_out_distinct = DISTINCT.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'distinct')}
+        ch_out_deseq2 = DESEQ2.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'deseq2')}
+        ch_out_permutation_test = PERMUTATION_TEST.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'permutation_test')}
+        ch_out_hierarchical_bootstrapping = HIERARCHICAL_BOOTSTRAPPING.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'hierarchical_bootstrapping')}
+        ch_out_scvi = SCVI.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'scvi')}
+        ch_out_dream = DREAM.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'dream')}
         
-        DISTINCT(ch_out_mast)
-    
-        ch_out_distinct = DISTINCT.out
-            .map{
-                meta, sc_anndata, pb_anndata, time_file ->
-                addRuntimeToMeta(meta, sc_anndata, pb_anndata, time_file, 'distinct')
-            }
+        // Combine all channels, introduce grouping key, group by key and merge maps together
+        ch_combined = ch_out_mast.mix(ch_out_distinct, ch_out_deseq2, ch_out_permutation_test, ch_out_hierarchical_bootstrapping, ch_out_scvi, ch_out_dream)
+            .map{meta -> [(meta.scenario + meta.n_cells + meta.n_genes + meta.run).join('_'), meta]}
+            .groupTuple()
+            .map{key, meta -> meta.flatten().sum()}
 
-        DESEQ2(ch_out_distinct)
-
-        ch_out_deseq2 = DESEQ2.out
-            .map{
-                meta, sc_anndata, pb_anndata, time_file ->
-                addRuntimeToMeta(meta, sc_anndata, pb_anndata, time_file, 'deseq2')
-            }
-        
-        PERMUTATION_TEST(ch_out_deseq2)
-
-        ch_out_permutation_test = PERMUTATION_TEST.out
-            .map{
-                meta, sc_anndata, pb_anndata, time_file ->
-                addRuntimeToMeta(meta, sc_anndata, pb_anndata, time_file, 'permutation_test')
-            }
-        
-        HIERARCHICAL_BOOTSTRAPPING(ch_out_permutation_test)
-
-        ch_out_hierarchical_bootstrapping = HIERARCHICAL_BOOTSTRAPPING.out
-            .map{
-                meta, sc_anndata, pb_anndata, time_file ->
-                addRuntimeToMeta(meta, sc_anndata, pb_anndata, time_file, 'hierarchical_bootstrapping')
-            }
-
-        SCVI(ch_out_hierarchical_bootstrapping)
-
-        ch_out_scvi = SCVI.out
-            .map{
-                meta, sc_anndata, pb_anndata, time_file ->
-                addRuntimeToMeta(meta, sc_anndata, pb_anndata, time_file, 'scvi')
-            }
-
-        DREAM(ch_out_scvi)
-
-        ch_out_dream = DREAM.out
-            .map{
-                meta, sc_anndata, pb_anndata, time_file ->
-                addRuntimeToMeta(meta, sc_anndata, pb_anndata, time_file, 'dream')
-            }
-            .map{meta, sc_anndata, pb_anndata -> meta}
-                
-        PREPARE_FIG_04(ch_out_dream.collect())
+        PREPARE_FIG_04(ch_combined.collect())
 
         PLOT_FIG_04(PREPARE_FIG_04.out.fixed_cells, PREPARE_FIG_04.out.fixed_genes)
 }

@@ -1,29 +1,22 @@
 process PVALUES {
-    tag "${tuple_list[0][0].scenario}_${tuple_list[0][0].run}"
+    tag "${meta.scenario}_${meta.run}"
 
     container 'leonhafner/python'
 
     input:
-    val tuple_list
+    tuple val(meta), path(results)
 
     output:
     tuple val(meta), path("pval_${meta.scenario}_${meta.run}.tsv")
 
     script:
-    // Process channel input which is a list of tuples consisting of a meta map and a path object
-    meta_list = []
-    path_list = []
-    for (element in tuple_list) {
-        meta_list.add(element[0])
-        path_list.add(element[1])
-    }
-    meta_string = meta_list.join(';')
-    path_string = path_list.join(';')
-    meta = [scenario: tuple_list[0][0].scenario, run: tuple_list[0][0].run]
+    meta_string = meta.join(';')
+    path_string = results.join(';')
+    meta = [scenario: meta[0].scenario, run: meta[0].run]
     template 'pvalues.py'
 
     stub:
-    meta = [scenario: tuple_list[0][0].scenario, run: tuple_list[0][0].run]
+    meta = [scenario: meta[0].scenario, run: meta[0].run]
     """
     touch pval_${meta.scenario}_${meta.run}.tsv
     """

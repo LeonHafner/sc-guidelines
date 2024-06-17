@@ -9,6 +9,8 @@ suppressPackageStartupMessages({
   library(SingleCellExperiment)
 })
 
+set.seed(0)
+
 p <- arg_parser("DREAM Script")
 
 p <- add_argument(p, "--input", help = "path to input h5ad")

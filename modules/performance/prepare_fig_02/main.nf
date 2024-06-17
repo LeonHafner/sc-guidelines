@@ -2,7 +2,7 @@ process PREPARE_FIG_02 {
     container 'leonhafner/python'
 
     input:
-    tuple val(meta), val(path_list)
+    tuple val(meta), path(path_list)
 
     output:
     tuple val(meta), path('cell_counts.txt')

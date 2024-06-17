@@ -8,6 +8,7 @@ from typing import Sequence, Tuple, Callable
 import pandas as pd
 from tqdm import tqdm
 
+np.random.seed(0)
 
 parser = argparse.ArgumentParser(
                     prog='Hierarchical Bootstrapping',

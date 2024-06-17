@@ -6,6 +6,7 @@ import pandas as pd
 import scanpy as sc
 import scvi
 
+scvi.settings.seed = 0
 
 parser = argparse.ArgumentParser(
                     prog='scVI approach',

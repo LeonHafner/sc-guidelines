@@ -7,6 +7,7 @@ suppressPackageStartupMessages({
   library(splatter)
   library(anndataR)
   library(scater)
+  library(MAST)
 })
 
 splimpSimulate <- function(vcf = mockVCF(n.samples = 20), params = newSplatPopParams(), balancedBatches = TRUE) {
@@ -293,26 +294,73 @@ args <- commandArgs(trailingOnly = TRUE)
 output <- args[1]
 nGenes <- as.integer(args[2])
 nCells <- as.integer(args[3])
+seed <- as.integer(args[4])
+preprocessing_threshold <- as.numeric(args[5])
 
-vcf <- mockVCF(n.samples = 10)
+set.seed(seed)
 
-params <- newSplatPopParams(nGenes = nGenes,
-                            eqtl.ES.shape = 0,
-                            eqtl.ES.rate = 0,
-                            out.prob = 0,
-                            eqtl.n = 0,
-                            eqtl.group.specific = 0,
-                            eqtl.condition.specific = 0,
-                            batch.size = 10,
-                            batchCells = c(nCells / 10),
-                            condition.prob = c(0.5, 0.5),
-                            cde.prob = 0.025,
-                            cde.downProb = 0.5,
-                            cde.facLoc = 2.5,
-                            cde.facScale = 0.4
-)
 
-sim <- splimpSimulate(vcf = vcf, params = params)
+
+assignParams <- function() {
+  vcf <- mockVCF(n.samples = 10)
+  
+  params <- newSplatPopParams(nGenes = nGenes,
+                              eqtl.ES.shape = 0,
+                              eqtl.ES.rate = 0,
+                              out.prob = 0,
+                              eqtl.n = 0,
+                              eqtl.group.specific = 0,
+                              eqtl.condition.specific = 0,
+                              batch.size = 10,
+                              batchCells = c(nCells / 10),
+                              condition.prob = c(0.5, 0.5),
+                              cde.prob = 0.025,
+                              cde.downProb = 0.5,
+                              cde.facLoc = 2.5,
+                              cde.facScale = 0.4
+  )
+  return(list(params=params, vcf=vcf))
+}
+
+errorMAST <- function(sim) {
+  # Do preprocessing according to the preprocessing process
+  counts <- assay(sim)
+  sim_filtered <- sim[rowSums(counts > 0) > (preprocessing_threshold * ncol(counts)), ]
+  
+  # Run MAST to check if it fails
+  names(assays(sim))[1] <- "counts"
+  
+  exprsArray <- as.matrix(counts(sim))
+  cData <- colData(sim)
+  fData <- data.frame(Gene = rownames(exprsArray))
+  
+  exprsArray.log <- log2(exprsArray + 1)
+  
+  sca <- FromMatrix(exprsArray = exprsArray.log, cData = cData, fData = fData, check_sanity = F)
+  
+  colData(sca)$Batch <- factor(colData(sca)$Batch)
+  colData(sca)$Condition <- factor(colData(sca)$Condition)
+  colData(sca)$Sample <- factor(colData(sca)$Sample)
+  
+  tryCatch({
+    zlmCond <- zlm(~ Condition + (1 | Sample), sca, method = "glmer", ebayes = F, strictConvergence = F)
+    print("No errors with MAST")
+    return (FALSE)
+  }, error = function(e) {
+    return (TRUE)
+  })
+}
+
+
+assignedParams <- assignParams()
+sim <- splimpSimulate(vcf = assignedParams$vcf, params = assignedParams$params)
+
+if (nGenes < 1000 | nCells < 1000) {
+  while (errorMAST(sim)) {
+    assignedParams <- assignParams()
+    sim <- splimpSimulate(vcf = assignedParams$vcf, params = assignedParams$params)
+  }
+}
 
 assays(sim)$BCV <- NULL
 assays(sim)$BaseCellMeans <- NULL

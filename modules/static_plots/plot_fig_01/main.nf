@@ -3,19 +3,16 @@ process PLOT_FIG_01 {
 
     publishDir "${params.output}/Fig_01", mode: 'copy'
 
+    input:
+    path 'Fig_01.png'
+    path 'Fig_01.drawio'
+
     output:
     path 'Fig_01.png', emit: 'png'
     path 'Fig_01.drawio', emit: 'drawio'
-    
-    script:
-    """
-    wget -O Fig_01.png https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_01/Fig_1.png
-    wget -O Fig_01.drawio https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_01/Fig_1.drawio
-    """
 
-    stub:
+    script:
+    // Empty process to transfer the static files to the output directory
     """
-    touch Fig_01.png
-    touch Fig_01.drawio
     """
 }
