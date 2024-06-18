@@ -32,7 +32,8 @@ adata = sc.read(file_in)
 if scenario in ["atlas", "atlas_hvg", "atlas-less-de"]:
     scvi.model.SCVI.setup_anndata(
         adata,
-        categorical_covariate_keys=["Batch", "Sample"],
+        batch_key="Batch",
+        categorical_covariate_keys=["Sample"],
     )
 elif scenario in ["dataset", "dataset_hvg", "dataset-less-de"]:
     scvi.model.SCVI.setup_anndata(
@@ -42,17 +43,20 @@ elif scenario in ["dataset", "dataset_hvg", "dataset-less-de"]:
 elif scenario in ["atlas-ub-conditions", "atlas-ub-conditions_hvg", "atlas-ub-conditions-less-de"]:
     scvi.model.SCVI.setup_anndata(
         adata,
-        categorical_covariate_keys=["Batch", "Sample"],
+        batch_key="Batch",
+        categorical_covariate_keys=["Sample"],
     )
 elif scenario == "atlas-negative":
     scvi.model.SCVI.setup_anndata(
         adata,
-        categorical_covariate_keys=["Batch", "Sample"],
+        batch_key="Batch",
+        categorical_covariate_keys=["Sample"],
     )
 elif scenario == "kang2018":
     scvi.model.SCVI.setup_anndata(
         adata,
-        categorical_covariate_keys=["Batch", "Sample"],
+        batch_key="Batch",
+        categorical_covariate_keys=["Sample"],
     )
 elif scenario in ["dataset-ub-cells", "dataset-ub-cells_hvg", "dataset-ub-cells-less-de"]:
     scvi.model.SCVI.setup_anndata(
@@ -76,7 +80,10 @@ group1 = "Condition1"
 group2 = "Condition2"
 
 de = model.differential_expression(
-    groupby="Condition", group1=group1, group2=group2
+    groupby="Condition",
+    group1=group1,
+    group2=group2,
+    batch_correction=True,
 )
 
 de.sort_index().to_csv(file_out, sep = "\t")
