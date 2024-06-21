@@ -1,7 +1,7 @@
 process PLOT_FIG_S06 {
     container 'leonhafner/plotting'
 
-    publishDir "${params.output}", mode: 'copy'
+    publishDir "${params.output}/Fig_S06", mode: 'copy'
 
     input:
     tuple val(meta), path(auc_files)

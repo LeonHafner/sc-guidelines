@@ -1,7 +1,7 @@
 process PLOT_FIG_04 {
     container 'leonhafner/plotting'
 
-    publishDir "${params.output}", mode: 'copy'
+    publishDir "${params.output}/Fig_04", mode: 'copy'
 
     input:
     path fixed_cells

@@ -1,7 +1,7 @@
 process PLOT_FIG_03 {
     container 'leonhafner/plotting'
 
-    publishDir "${params.output}", mode: 'copy'
+    publishDir "${params.output}/Fig_03", mode: 'copy'
 
     input:
     path correlations, stageAs: 'correlations/correlations_?.tsv'

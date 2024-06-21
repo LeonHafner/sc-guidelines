@@ -1,7 +1,7 @@
 process PLOT_FIG_S04 {
     container 'leonhafner/plotting'
 
-    publishDir "${params.output}", mode: 'copy'
+    publishDir "${params.output}/Fig_S04", mode: 'copy'
 
     input:
     tuple val(meta), path(plotting_data_kang)
