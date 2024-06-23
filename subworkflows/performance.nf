@@ -22,6 +22,7 @@ include { PLOT_FIG_S03 } from '../modules/performance/plot_fig_s03/main'
 include { PLOT_FIG_S06 } from '../modules/performance/plot_fig_s06/main'
 include { PLOT_FIG_S07 } from '../modules/performance/plot_fig_s07/main'
 include { PLOT_FIG_S08 } from '../modules/performance/plot_fig_s08/main'
+include { PLOT_FIG_S09 } from '../modules/performance/plot_fig_s09'
 
 workflow PERFORMANCE {
     take:
@@ -186,4 +187,8 @@ workflow PERFORMANCE {
             .map{key, meta, path -> [meta, path]}
         
         PLOT_FIG_S08(ch_fig_s08)
+
+        ch_fig_s09 = PSEUDOBULKING.out.filter{meta, file -> meta.scenario == "atlas-ub-conditions"}
+        
+        PLOT_FIG_S09(ch_fig_s09)
 }
