@@ -16,12 +16,14 @@ p <- arg_parser("Distinct Script")
 p <- add_argument(p, "--input", help = "path to input h5ad")
 p <- add_argument(p, "--output", help = "path to output h5ad")
 p <- add_argument(p, "--scenario", help = "simulation scenario, can be 'atlas', 'dataset' and 'paired'")
+p <- add_argument(p, "--threads", help = "number of threads", default = 8, type = "integer")
 
 argv <- parse_args(p)
 
 input <- argv$input
 output <- argv$output
 scenario <- argv$scenario
+threads <- argv$threads
 
 print(input)
 print(output)
@@ -65,7 +67,7 @@ res <- distinct_test(x = data.norm,
                      design = design,
                      column_to_test = 2,
                      min_non_zero_cells = 20,
-                     n_cores = 8)
+                     n_cores = threads)
 
 
 write.table(res, file = output, sep = '\t', row.names = FALSE)

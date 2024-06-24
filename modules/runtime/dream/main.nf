@@ -15,7 +15,8 @@ process DREAM {
     dream.R \
         --input ${anndata} \
         --output results.tsv \
-        --scenario dataset
+        --scenario dataset \
+        --threads 1
     END=\$( date +%s )
     echo \$((\$END-\$START)) > time.txt
     """
