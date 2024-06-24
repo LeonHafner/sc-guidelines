@@ -166,3 +166,10 @@ grid <- plot_grid(
   vjust = -10)
 
 ggsave(plot = grid, filename = "Fig_05.png", width = 1803, height = 2048, units = "px")
+
+df.atlas.ordered[, scenario := "atlas"]
+df.atlas_ub_conditions.ordered[, scenario := "atlas_ub_conditions"]
+df.dataset.ordered[, scenario := "dataset"]
+df.dataset_ub_cells.ordered[, scenario := "dataset_ub_cells"]
+
+fwrite(rbindlist(list(df.atlas.ordered, df.atlas_ub_conditions.ordered, df.dataset.ordered, df.dataset_ub_cells.ordered)), file = "median_auc.tsv", sep = "\\t")
