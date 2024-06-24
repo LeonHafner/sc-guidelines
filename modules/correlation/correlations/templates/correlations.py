@@ -25,7 +25,7 @@ for sample in tqdm(adata.obs['Sample'].unique(), desc="Within-sample correlation
         i, j = np.random.choice(n_obs, 2, replace=False)
         random_pairs.add((i, j))
     for i, j in random_pairs:
-        result_intra.append(('intra', run, spearmanr(adata_sample.X[i], adata_sample.X[j]).statistic))
+        result_intra.append(('within-sample', run, spearmanr(adata_sample.X[i], adata_sample.X[j]).statistic))
 
 result_inter = []
 for _ in tqdm(range(1000), desc="Between-sample correlations"):
@@ -34,7 +34,7 @@ for _ in tqdm(range(1000), desc="Between-sample correlations"):
         adata_sample = adata[adata.obs['Sample'] == sample]
         cells.append(adata_sample.X[random.randint(0, adata_sample.n_obs - 1), :])
     for cell_1, cell_2 in itertools.combinations(cells, r=2):
-        result_inter.append(('inter', run, spearmanr(cell_1, cell_2).statistic))
+        result_inter.append(('between-sample', run, spearmanr(cell_1, cell_2).statistic))
 
 print("Within-sample: ", len(result_intra))
 print("Between sample:", len(result_inter))
