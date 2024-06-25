@@ -150,7 +150,7 @@ p.dataset_ub_cells <- ggplot(df.dataset_ub_cells, aes(x = method, y = auc, color
         axis.ticks.x = element_blank(),
         axis.title.x = element_blank(),
         plot.title = element_text(color = "black", size = 10, hjust = 0.5, face = "plain")) +
-  ggtitle("Dataset with varying cell counts")
+  ggtitle("Dataset with varying cell numbers")
 
 grid <- plot_grid(
   plot_grid(p.dataset + theme(legend.position = "none", plot.margin = unit(c(0.5, 0.1, 0, 0.1), "cm")),

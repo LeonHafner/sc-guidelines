@@ -57,9 +57,9 @@ custom_labels <- function(variable, value) {
   # Define custom labels based on 'category'
   labels <- c(
     atlas = "Atlas",
-    atlas_ub_conditions = "Atlas (unbalanced conditions)",
+    atlas_ub_conditions = "Atlas with unbalanced conditions",
     dataset = "Dataset",
-    dataset_ub_cells = "Dataset (unbalanced cells)"
+    dataset_ub_cells = "Dataset with varying cell numbers"
   )
   return(labels[value])
 }
