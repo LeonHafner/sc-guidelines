@@ -62,4 +62,4 @@ p <- ggplot(df, aes(x = method, y = auc, fill = fixed_effect)) +
   theme_cowplot() +
   theme(axis.title.x = element_blank())
 
-ggsave(p, filename = "Fig_S08.png", width = 2650, height = 2000, units = 'px', dpi = 300)
+ggsave(p, filename = "Fig_S02.png", width = 2650, height = 2000, units = 'px', dpi = 300)
