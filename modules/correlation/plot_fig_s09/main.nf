@@ -1,20 +1,20 @@
-process PLOT_FIG_03 {
+process PLOT_FIG_S09 {
     container 'leonhafner/plotting'
 
-    publishDir "${params.output}/Fig_03", mode: 'copy'
+    publishDir "${params.output}/Fig_S09", mode: 'copy'
 
     input:
     path correlations, stageAs: 'correlations/correlations_?.tsv'
 
     output:
-    path 'Fig_03.png'
+    path 'Fig_S09.png'
 
     script:
     correlation_string = correlations.collect{ it.toString() }.join(';')
-    template 'plot_fig_03.R'
+    template 'plot_fig_S09.R'
 
     stub:
     """
-    touch Fig_03.png
+    touch Fig_S09.png
     """
 }

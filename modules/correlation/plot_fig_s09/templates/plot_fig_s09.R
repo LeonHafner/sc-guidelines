@@ -32,4 +32,4 @@ p1 <- ggplot(sampled_data, aes(x = run, y = correlation, fill = type)) +
   scale_fill_manual(values = c(color.inter, color.intra)) +
   theme_cowplot(14)
 
-ggsave(p1, file = "Fig_03.png", width = 2480, height = 1351, units = 'px')
+ggsave(p1, file = "Fig_S09.png", width = 2480, height = 1351, units = 'px')
