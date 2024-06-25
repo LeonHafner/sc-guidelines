@@ -26,4 +26,4 @@ geom_abline(linetype = "dashed", color = "gray") +
 theme_cowplot() +
 coord_cartesian(xlim = c(0, 0.15), ylim = c(0, 0.15))
 
-ggsave(p.sim, width = 2650, height = 2000, units = "px", dpi = 300, filename = "Fig_07.png")
+ggsave(p.sim, width = 2650, height = 2000, units = "px", dpi = 300, filename = "Fig_05.png")
