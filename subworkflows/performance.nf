@@ -1,27 +1,27 @@
-include { SIMULATION } from '../modules/performance/simulation/main'
-include { UNBALANCE_ATLAS } from '../modules/performance/unbalance_atlas/main'
-include { GROUND_TRUTH } from '../modules/performance/ground_truth/main'
-include { PREPROCESSING } from '../modules/performance/preprocessing/main'
-include { FILTER_HVG } from '../modules/performance/filter_hvg/main'
-include { PSEUDOBULKING } from '../modules/performance/pseudobulking/main'
-include { MAST } from '../modules/performance/mast/main'
-include { DISTINCT } from '../modules/performance/distinct/main'
-include { DESEQ2 } from '../modules/performance/deseq2/main'
-include { PERMUTATION_TEST } from '../modules/performance/permutation_test/main'
-include { HIERARCHICAL_BOOTSTRAPPING } from '../modules/performance/hierarchical_bootstrapping/main'
-include { SCVI } from '../modules/performance/scvi/main'
-include { DREAM } from '../modules/performance/dream/main'
-include { PVALUES } from '../modules/performance/pvalues/main'
-include { PRECISION_RECALL } from '../modules/performance/precision_recall/main'
-include { PREPARE_FIG_02 } from '../modules/performance/prepare_fig_02/main'
-include { PLOT_FIG_02 } from '../modules/performance/plot_fig_02/main'
+include { SIMULATION } from '../modules/performance/simulation'
+include { UNBALANCE_ATLAS } from '../modules/performance/unbalance_atlas'
+include { GROUND_TRUTH } from '../modules/performance/ground_truth'
+include { PREPROCESSING } from '../modules/performance/preprocessing'
+include { FILTER_HVG } from '../modules/performance/filter_hvg'
+include { PSEUDOBULKING } from '../modules/performance/pseudobulking'
+include { MAST } from '../modules/performance/mast'
+include { DISTINCT } from '../modules/performance/distinct'
+include { DESEQ2 } from '../modules/performance/deseq2'
+include { PERMUTATION_TEST } from '../modules/performance/permutation_test'
+include { HIERARCHICAL_BOOTSTRAPPING } from '../modules/performance/hierarchical_bootstrapping'
+include { SCVI } from '../modules/performance/scvi'
+include { DREAM } from '../modules/performance/dream'
+include { PVALUES } from '../modules/performance/pvalues'
+include { PRECISION_RECALL } from '../modules/performance/precision_recall'
+include { PREPARE_FIG_02 } from '../modules/performance/prepare_fig_02'
+include { PLOT_FIG_02 } from '../modules/performance/plot_fig_02'
 include { PLOT_FIG_03 } from '../modules/performance/plot_fig_03'
 include { PLOT_FIG_04 } from '../modules/performance/plot_fig_04'
-include { PLOT_FIG_S02 } from '../modules/performance/plot_fig_s02/main'
-include { PLOT_FIG_S03 } from '../modules/performance/plot_fig_s03/main'
-include { PLOT_FIG_S06 } from '../modules/performance/plot_fig_s06/main'
-include { PLOT_FIG_S07 } from '../modules/performance/plot_fig_s07/main'
-include { PLOT_FIG_S08 } from '../modules/performance/plot_fig_s08/main'
+include { PLOT_FIG_S03 } from '../modules/performance/plot_fig_s03'
+include { PLOT_FIG_S05 } from '../modules/performance/plot_fig_s05'
+include { PLOT_FIG_S06 } from '../modules/performance/plot_fig_s06'
+include { PLOT_FIG_S07 } from '../modules/performance/plot_fig_s07'
+include { PLOT_FIG_S08 } from '../modules/performance/plot_fig_s08'
 include { PLOT_FIG_S09 } from '../modules/performance/plot_fig_s09'
 
 workflow PERFORMANCE {
@@ -134,15 +134,6 @@ workflow PERFORMANCE {
     
         PLOT_FIG_04(ch_fig_04)
 
-        // Filter for the scenarios needed for Fig_S02, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
-        ch_fig_s02 = PRECISION_RECALL.out.auc
-            .filter{item -> ['atlas_hvg', 'dataset_hvg', 'atlas-ub-conditions_hvg', 'dataset-ub-cells_hvg'].contains(item[0].scenario)}
-            .map{meta, path -> ["key", meta, path]}
-            .groupTuple()
-            .map{key, meta, path -> [meta, path]}
-    
-        PLOT_FIG_S02(ch_fig_s02)
-
         // Filter prc files by scenario, map 'run' to first argument to group them by run and map them back attaching a new meta object and flattening the list of paths
         ch_fig_s03 = PRECISION_RECALL.out.prc
             .filter{meta, path -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(meta.scenario)}
@@ -151,6 +142,15 @@ workflow PERFORMANCE {
             .map{run, paths -> [[run: run], paths.flatten()]}
 
         PLOT_FIG_S03(ch_fig_s03)
+
+        // Filter for the scenarios needed for Fig_S02, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
+        ch_fig_s05 = PRECISION_RECALL.out.auc
+            .filter{item -> ['atlas_hvg', 'dataset_hvg', 'atlas-ub-conditions_hvg', 'dataset-ub-cells_hvg'].contains(item[0].scenario)}
+            .map{meta, path -> ["key", meta, path]}
+            .groupTuple()
+            .map{key, meta, path -> [meta, path]}
+    
+        PLOT_FIG_S05(ch_fig_s05)
 
         // Filter for the scenarios needed for Fig_S06, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
         ch_fig_s06 = PRECISION_RECALL.out.auc
