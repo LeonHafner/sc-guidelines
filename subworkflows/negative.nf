@@ -12,7 +12,7 @@ include { PVALUES } from '../modules/performance/pvalues'
 include { SCVI_PROCESSING } from '../modules/negative/scvi_processing'
 include { FPS_FPR } from '../modules/negative/fps_fpr'
 include { PLOT_FIG_05 } from '../modules/negative/plot_fig_05'
-include { PLOT_FIG_S04 } from '../modules/negative/plot_fig_s04'
+include { PLOT_FIG_S08 } from '../modules/negative/plot_fig_s08'
 
 
 workflow NEGATIVE {
@@ -69,11 +69,11 @@ workflow NEGATIVE {
         PLOT_FIG_05(FPS_FPR.out.fpr.filter{meta, path -> meta.scenario == 'atlas-negative'})
 
         // Channel for kang and simulated scenario - use 'first' for stability in case more runs of these scenarios are added in later versions
-        ch_fig_s04_kang = FPS_FPR.out.fpr.filter{meta, path -> meta.scenario == 'kang2018'}.first()
-        ch_fig_s04_atlas_negative = FPS_FPR.out.fpr.filter{meta, path -> meta.scenario == 'atlas-negative'}.first()
+        ch_fig_s08_kang = FPS_FPR.out.fpr.filter{meta, path -> meta.scenario == 'kang2018'}.first()
+        ch_fig_s08_atlas_negative = FPS_FPR.out.fpr.filter{meta, path -> meta.scenario == 'atlas-negative'}.first()
 
-        PLOT_FIG_S04(
-            ch_fig_s04_kang,
-            ch_fig_s04_atlas_negative,
+        PLOT_FIG_S08(
+            ch_fig_s08_kang,
+            ch_fig_s08_atlas_negative,
             )
 }

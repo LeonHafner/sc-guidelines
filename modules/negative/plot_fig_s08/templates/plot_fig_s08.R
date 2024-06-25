@@ -55,4 +55,4 @@ double.plot <- plot_grid(p.sim + theme(legend.position = "none",
 legend.double.plot <- get_legend(p.sim + theme(legend.margin = margin(0, 0, 20, 20)))
 p.combined <- plot_grid(double.plot, legend.double.plot, rel_widths = c(2.5, 1))
 
-ggsave(p.combined, filename = "Fig_S04.png", width = 2370, height = 3194, units = "px")
+ggsave(p.combined, filename = "Fig_S08.png", width = 2370, height = 3194, units = "px")
