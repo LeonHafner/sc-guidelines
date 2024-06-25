@@ -42,4 +42,4 @@ p <- ggplot(data, aes(x = Batch, y = count, fill=Condition)) +
         axis.text = element_text(size = 8),
         strip.text = element_text(size = 8))
 
-ggsave(p, filename = "Fig_S09_run${meta.run}.png", width = 2480, height = 3100, units = "px", dpi=300)
+ggsave(p, filename = "Fig_S03_run${meta.run}.png", width = 2480, height = 3100, units = "px", dpi=300)
