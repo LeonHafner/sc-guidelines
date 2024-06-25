@@ -11,7 +11,7 @@ process PLOT_FIG_S09 {
 
     script:
     correlation_string = correlations.collect{ it.toString() }.join(';')
-    template 'plot_fig_S09.R'
+    template 'plot_fig_s09.R'
 
     stub:
     """

@@ -13,7 +13,7 @@ workflow STATIC_PLOTS {
         ch_plot_fig_07_png = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_09/Fig_9.png')
         ch_plot_fig_07_drawio = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_09/Fig_9.drawio')
         
-        PLOT_FIG_08(ch_plot_fig_07_png, ch_plot_fig_07_drawio)
+        PLOT_FIG_07(ch_plot_fig_07_png, ch_plot_fig_07_drawio)
 
 
         ch_plot_fig_s01 = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_10/Fig_10.png')
