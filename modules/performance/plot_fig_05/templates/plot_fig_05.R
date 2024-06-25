@@ -75,7 +75,9 @@ p.atlas <- ggplot(df.atlas, aes(x = method, y = auc, color = method)) +
         axis.title.y = element_text(size = 12),
         axis.text.y = element_text(size = 10),
         axis.ticks.x = element_blank(),
-        axis.title.x = element_blank())
+        axis.title.x = element_blank(),
+        plot.title = element_text(color = "black", size = 10, hjust = 0.5)) +
+  ggtitle("Atlas")
 
 
 # Atlas-ub-conditions
@@ -98,7 +100,9 @@ p.atlas_ub_conditions <- ggplot(df.atlas_ub_conditions, aes(x = method, y = auc,
         axis.title.y = element_text(size = 12),
         axis.text.y = element_text(size = 10),
         axis.ticks.x = element_blank(),
-        axis.title.x = element_blank())
+        axis.title.x = element_blank(),
+        plot.title = element_text(color = "black", size = 10, hjust = 0.5)) +
+  ggtitle("Atlas with unbalanced conditions")
 
 # Dataset
 df.dataset <- df[scenario == "dataset"]
@@ -120,7 +124,9 @@ p.dataset <- ggplot(df.dataset, aes(x = method, y = auc, color = method)) +
         axis.title.y = element_text(size = 12),
         axis.text.y = element_text(size = 10),
         axis.ticks.x = element_blank(),
-        axis.title.x = element_blank())
+        axis.title.x = element_blank(),
+        plot.title = element_text(color = "black", size = 10, hjust = 0.5)) +
+  ggtitle("Dataset")
 
 # Dataset-ub-cells
 df.dataset_ub_cells <- df[scenario == "dataset-ub-cells"]
@@ -142,13 +148,15 @@ p.dataset_ub_cells <- ggplot(df.dataset_ub_cells, aes(x = method, y = auc, color
         axis.title.y = element_text(size = 12),
         axis.text.y = element_text(size = 10),
         axis.ticks.x = element_blank(),
-        axis.title.x = element_blank())
+        axis.title.x = element_blank(),
+        plot.title = element_text(color = "black", size = 10, hjust = 0.5)) +
+  ggtitle("Dataset with varying cell counts")
 
 grid <- plot_grid(
-  plot_grid(p.atlas + theme(legend.position = "none"),
-            p.atlas_ub_conditions + theme(axis.title.y = element_blank(), legend.position = "none"),
-            p.dataset + theme(legend.position = "none"),
-            p.dataset_ub_cells + theme(axis.title.y = element_blank(), legend.position = "none"),
+  plot_grid(p.dataset + theme(legend.position = "none", plot.margin = unit(c(0.5, 0.1, 0, 0.1), "cm")),
+            p.atlas + theme(legend.position = "none", axis.title.y = element_blank(), plot.margin = unit(c(0.5, 0.1, 0, 0.1), "cm")),
+            p.dataset_ub_cells + theme(legend.position = "none", plot.margin = unit(c(0.5, 0.1, 0, 0.1), "cm")),
+            p.atlas_ub_conditions + theme(legend.position = "none", axis.title.y = element_blank(), plot.margin = unit(c(0.5, 0.1, 0, 0.1), "cm")),
             labels = "AUTO",
             ncol = 2,
             align = "hv",
