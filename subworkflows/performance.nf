@@ -19,8 +19,8 @@ include { PLOT_FIG_03 } from '../modules/performance/plot_fig_03'
 include { PLOT_FIG_04 } from '../modules/performance/plot_fig_04'
 include { PLOT_FIG_S02 } from '../modules/performance/plot_fig_s02'
 include { PLOT_FIG_S03 } from '../modules/performance/plot_fig_s03'
+include { PLOT_FIG_S04 } from '../modules/performance/plot_fig_s04'
 include { PLOT_FIG_S05 } from '../modules/performance/plot_fig_s05'
-include { PLOT_FIG_S06 } from '../modules/performance/plot_fig_s06'
 include { PLOT_FIG_S07 } from '../modules/performance/plot_fig_s07'
 include { PLOT_FIG_S09 } from '../modules/performance/plot_fig_s09'
 
@@ -151,17 +151,8 @@ workflow PERFORMANCE {
 
         PLOT_FIG_S03(ch_fig_s03)
 
-        // Filter for the scenarios needed for Fig_S02, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
-        ch_fig_s05 = PRECISION_RECALL.out.auc
-            .filter{item -> ['atlas_hvg', 'dataset_hvg', 'atlas-ub-conditions_hvg', 'dataset-ub-cells_hvg'].contains(item[0].scenario)}
-            .map{meta, path -> ["key", meta, path]}
-            .groupTuple()
-            .map{key, meta, path -> [meta, path]}
-    
-        PLOT_FIG_S05(ch_fig_s05)
-
         // Filter for the scenarios needed for Fig_S06, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
-        ch_fig_s06 = PRECISION_RECALL.out.auc
+        ch_fig_s04 = PRECISION_RECALL.out.auc
             .filter{meta, path -> [
                 'atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells',
                 'atlas-less-de', 'dataset-less-de', 'atlas-ub-conditions-less-de', 'dataset-ub-cells-less-de'
@@ -170,7 +161,16 @@ workflow PERFORMANCE {
             .groupTuple()
             .map{key, meta, path -> [meta, path]}
 
-        PLOT_FIG_S06(ch_fig_s06)
+        PLOT_FIG_S04(ch_fig_s04)
+
+        // Filter for the scenarios needed for Fig_S02, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
+        ch_fig_s05 = PRECISION_RECALL.out.auc
+            .filter{item -> ['atlas_hvg', 'dataset_hvg', 'atlas-ub-conditions_hvg', 'dataset-ub-cells_hvg'].contains(item[0].scenario)}
+            .map{meta, path -> ["key", meta, path]}
+            .groupTuple()
+            .map{key, meta, path -> [meta, path]}
+    
+        PLOT_FIG_S05(ch_fig_s05)
 
         ch_fig_s07_prc = PRECISION_RECALL.out.prc
             .filter{meta, path -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(meta.scenario)}

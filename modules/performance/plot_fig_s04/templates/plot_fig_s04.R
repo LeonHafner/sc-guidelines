@@ -75,4 +75,4 @@ p <- ggplot(dataframe, aes(x = method, y = auc, fill = less_de)) +
   theme_cowplot() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-ggsave(plot = p, width = 3606, height = 3900, units = "px", dpi = 400, filename = "Fig_S06.png")
+ggsave(plot = p, width = 3606, height = 3900, units = "px", dpi = 400, filename = "Fig_S04.png")
