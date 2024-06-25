@@ -81,4 +81,4 @@ p <- ggplot(prc, aes(x = recall, y = precision, color = method)) +
         axis.title.y = element_text(size = 16),
         axis.text.y = element_text(size = 16))
 
-ggsave(p, filename = "Fig_06.png", width = 2650, height = 2000, units = "px", dpi = 300)
+ggsave(p, filename = "Fig_04.png", width = 2650, height = 2000, units = "px", dpi = 300)

@@ -173,7 +173,7 @@ grid <- plot_grid(
   rel_heights = c(1, 0.3),
   vjust = -10)
 
-ggsave(plot = grid, filename = "Fig_05.png", width = 1803, height = 2048, units = "px")
+ggsave(plot = grid, filename = "Fig_03.png", width = 1803, height = 2048, units = "px")
 
 df.atlas.ordered[, scenario := "atlas"]
 df.atlas_ub_conditions.ordered[, scenario := "atlas_ub_conditions"]

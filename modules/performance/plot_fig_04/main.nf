@@ -1,20 +1,20 @@
-process PLOT_FIG_06 {
+process PLOT_FIG_04 {
     container 'leonhafner/plotting'
 
-    publishDir "${params.output}/Fig_06", mode: 'copy'
+    publishDir "${params.output}/Fig_04", mode: 'copy'
 
     input:
     tuple val(meta), path(prc)
 
     output:
-    path "Fig_06.png"
+    path "Fig_04.png"
 
     script:
     prc_path_string = prc.join(';')
-    template 'plot_fig_06.R'
+    template 'plot_fig_04.R'
 
     stub:
     """
-    touch Fig_06.png
+    touch Fig_04.png
     """
 }

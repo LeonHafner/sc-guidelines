@@ -15,8 +15,8 @@ include { PVALUES } from '../modules/performance/pvalues/main'
 include { PRECISION_RECALL } from '../modules/performance/precision_recall/main'
 include { PREPARE_FIG_02 } from '../modules/performance/prepare_fig_02/main'
 include { PLOT_FIG_02 } from '../modules/performance/plot_fig_02/main'
-include { PLOT_FIG_05 } from '../modules/performance/plot_fig_05/main'
-include { PLOT_FIG_06 } from '../modules/performance/plot_fig_06/main'
+include { PLOT_FIG_03 } from '../modules/performance/plot_fig_03'
+include { PLOT_FIG_04 } from '../modules/performance/plot_fig_04'
 include { PLOT_FIG_S02 } from '../modules/performance/plot_fig_s02/main'
 include { PLOT_FIG_S03 } from '../modules/performance/plot_fig_s03/main'
 include { PLOT_FIG_S06 } from '../modules/performance/plot_fig_s06/main'
@@ -120,19 +120,19 @@ workflow PERFORMANCE {
 
         PLOT_FIG_02(PREPARE_FIG_02.out, ch_fig_02_png, ch_fig_02_drawio)
 
-        // Filter for the scenarios needed for Fig_05, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
-        ch_fig_05 = PRECISION_RECALL.out.auc
+        // Filter for the scenarios needed for Fig_03, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
+        ch_fig_03 = PRECISION_RECALL.out.auc
             .filter{item -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(item[0].scenario)}
             .map{meta, path -> ["key", meta, path]}
             .groupTuple()
             .map{key, meta, path -> [meta, path]}
         
-        PLOT_FIG_05(ch_fig_05)
+        PLOT_FIG_03(ch_fig_03)
 
-        ch_fig_06 = PRECISION_RECALL.out.prc
+        ch_fig_04 = PRECISION_RECALL.out.prc
             .filter{meta, path -> meta.scenario == 'kang2018'}
     
-        PLOT_FIG_06(ch_fig_06)
+        PLOT_FIG_04(ch_fig_04)
 
         // Filter for the scenarios needed for Fig_S02, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
         ch_fig_s02 = PRECISION_RECALL.out.auc
