@@ -76,7 +76,7 @@ p.atlas <- ggplot(df.atlas, aes(x = method, y = auc, color = method)) +
         axis.text.y = element_text(size = 10),
         axis.ticks.x = element_blank(),
         axis.title.x = element_blank(),
-        plot.title = element_text(color = "black", size = 10, hjust = 0.5)) +
+        plot.title = element_text(color = "black", size = 10, hjust = 0.5, face = "plain")) +
   ggtitle("Atlas")
 
 
@@ -101,7 +101,7 @@ p.atlas_ub_conditions <- ggplot(df.atlas_ub_conditions, aes(x = method, y = auc,
         axis.text.y = element_text(size = 10),
         axis.ticks.x = element_blank(),
         axis.title.x = element_blank(),
-        plot.title = element_text(color = "black", size = 10, hjust = 0.5)) +
+        plot.title = element_text(color = "black", size = 10, hjust = 0.5, face = "plain")) +
   ggtitle("Atlas with unbalanced conditions")
 
 # Dataset
@@ -125,7 +125,7 @@ p.dataset <- ggplot(df.dataset, aes(x = method, y = auc, color = method)) +
         axis.text.y = element_text(size = 10),
         axis.ticks.x = element_blank(),
         axis.title.x = element_blank(),
-        plot.title = element_text(color = "black", size = 10, hjust = 0.5)) +
+        plot.title = element_text(color = "black", size = 10, hjust = 0.5, face = "plain")) +
   ggtitle("Dataset")
 
 # Dataset-ub-cells
@@ -149,7 +149,7 @@ p.dataset_ub_cells <- ggplot(df.dataset_ub_cells, aes(x = method, y = auc, color
         axis.text.y = element_text(size = 10),
         axis.ticks.x = element_blank(),
         axis.title.x = element_blank(),
-        plot.title = element_text(color = "black", size = 10, hjust = 0.5)) +
+        plot.title = element_text(color = "black", size = 10, hjust = 0.5, face = "plain")) +
   ggtitle("Dataset with varying cell counts")
 
 grid <- plot_grid(
