@@ -113,9 +113,9 @@ workflow PERFORMANCE {
             .collect()
             .map{path -> [[scenario: 'dataset-ub-cells'], path]}
 
-        ch_fig_02_png = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_02/Fig_2.png')
-        ch_fig_02_drawio = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/2ceb8da423dba514f503959fd1a56643e389eaf7/plotting/Fig_02/Fig_2.drawio')
-                
+        ch_fig_02_png = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/80e1bd085596a121fb490ef924da34fa18f250af/plotting/Fig_02/Fig_2.png')
+        ch_fig_02_drawio = Channel.from('https://raw.githubusercontent.com/LeonHafner/sc-guidelines/80e1bd085596a121fb490ef924da34fa18f250af/plotting/Fig_02/Fig_2.drawio')
+
         PREPARE_FIG_02(ch_fig_02)
 
         PLOT_FIG_02(PREPARE_FIG_02.out, ch_fig_02_png, ch_fig_02_drawio)
