@@ -124,7 +124,7 @@ p <- plot_grid(
   vjust = -10
 )
 
-ggsave(p, width = 3606, height = 4096, units = "px", dpi = 400, filename = "Fig_S03_run${meta.run}.png")
+ggsave(p, width = 3606, height = 4096, units = "px", dpi = 400, filename = "Fig_S07_run${meta.run}.png")
 
 
 

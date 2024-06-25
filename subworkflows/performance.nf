@@ -18,10 +18,10 @@ include { PLOT_FIG_02 } from '../modules/performance/plot_fig_02'
 include { PLOT_FIG_03 } from '../modules/performance/plot_fig_03'
 include { PLOT_FIG_04 } from '../modules/performance/plot_fig_04'
 include { PLOT_FIG_S02 } from '../modules/performance/plot_fig_s02'
-include { PLOT_FIG_S03 } from '../modules/performance/plot_fig_s03'
 include { PLOT_FIG_S04 } from '../modules/performance/plot_fig_s04'
 include { PLOT_FIG_S05 } from '../modules/performance/plot_fig_s05'
 include { PLOT_FIG_S06 } from '../modules/performance/plot_fig_s06'
+include { PLOT_FIG_S07 } from '../modules/performance/plot_fig_s07'
 include { PLOT_FIG_S09 } from '../modules/performance/plot_fig_s09'
 
 workflow PERFORMANCE {
@@ -142,15 +142,6 @@ workflow PERFORMANCE {
         
         PLOT_FIG_S02(ch_fig_s02)
 
-        // Filter prc files by scenario, map 'run' to first argument to group them by run and map them back attaching a new meta object and flattening the list of paths
-        ch_fig_s03 = PRECISION_RECALL.out.prc
-            .filter{meta, path -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(meta.scenario)}
-            .map{meta, path -> [meta.run, [path]]}
-            .groupTuple()
-            .map{run, paths -> [[run: run], paths.flatten()]}
-
-        PLOT_FIG_S03(ch_fig_s03)
-
         // Filter for the scenarios needed for Fig_S06, introduce pseudokey, group to get list of metas and list of paths, remove pseudokey
         ch_fig_s04 = PRECISION_RECALL.out.auc
             .filter{meta, path -> [
@@ -187,6 +178,15 @@ workflow PERFORMANCE {
             .collect()
 
         PLOT_FIG_S06(ch_fig_s06_prc, ch_fig_s06_auc)
+
+        // Filter prc files by scenario, map 'run' to first argument to group them by run and map them back attaching a new meta object and flattening the list of paths
+        ch_fig_s07 = PRECISION_RECALL.out.prc
+            .filter{meta, path -> ['atlas', 'dataset', 'atlas-ub-conditions', 'dataset-ub-cells'].contains(meta.scenario)}
+            .map{meta, path -> [meta.run, [path]]}
+            .groupTuple()
+            .map{run, paths -> [[run: run], paths.flatten()]}
+
+        PLOT_FIG_S07(ch_fig_s07)
 
         ch_fig_s09 = PSEUDOBULKING.out.filter{meta, file -> meta.scenario == "atlas-ub-conditions"}
         
