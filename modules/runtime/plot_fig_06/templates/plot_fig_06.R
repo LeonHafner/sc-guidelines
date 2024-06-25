@@ -87,4 +87,4 @@ double.plot <- plot_grid(p1 + theme(legend.position = "none"),
 runtime_benchmark <- plot_grid(double.plot, legend.double.plot, rel_widths = c(2.5, 1))
 
 
-ggsave(runtime_benchmark, width = 2370, height = 3194, units = "px", dpi = 300, filename = "Fig_04.png")
+ggsave(runtime_benchmark, width = 2370, height = 3194, units = "px", dpi = 300, filename = "Fig_06.png")

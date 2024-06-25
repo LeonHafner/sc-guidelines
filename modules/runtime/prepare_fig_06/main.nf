@@ -1,4 +1,4 @@
-process PREPARE_FIG_04 {
+process PREPARE_FIG_06 {
     container 'leonhafner/python'
 
     input:
@@ -10,7 +10,7 @@ process PREPARE_FIG_04 {
 
     script:
     meta_string = meta.collect{ it.toString() }.join(';')
-    template 'prepare_fig_04.py'
+    template 'prepare_fig_06.py'
 
     stub:
     """
