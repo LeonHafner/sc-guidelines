@@ -1,17 +1,17 @@
 #!/usr/bin/env Rscript
 
-library(data.table)
-library(ggplot2)
-library(cowplot)
-library(ggokabeito)
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(cowplot)
+  library(ggokabeito)
+  library(data.table)
+  library(pracma)
+})
+
+path_string <- "${path_string}"
 
 
-prc_path_string <- "${prc_path_string}"
-auc_meta_string <- "${auc_meta_string}"
-auc_path_string <- "${auc_path_string}"
-
-# Parse PRC input path string into dataframe with columns 'scenario', 'method' and 'path'
-parse_prc_path_string_into_dataframe <- function(path_string) {
+parse_path_string_into_dataframe <- function(path_string) {
   paths <- strsplit(path_string, ";")[[1]]
   
   df <- data.frame(scenario = character(0), method = character(0), path = character(0))
@@ -29,90 +29,81 @@ parse_prc_path_string_into_dataframe <- function(path_string) {
   return(df)
 }
 
-# Split each individual AUC meta object into 'scenario' and 'run'
-auc_parse_meta <- function(auc_meta) {
-  parts <- strsplit(auc_meta, ", ")[[1]]
-  scenario <- sub("scenario:", "", parts[1])
-  run <- sub("run:", "", parts[2])
-  return(list("scenario" = scenario, "run" = run))
-}
-
-# Convert PRC paths to dataframe
-prc_paths_df <- parse_prc_path_string_into_dataframe(prc_path_string)
-prc_paths_df <- prc_paths_df[prc_paths_df\$method == "distinct",]
-
-# Convert AUC meta and paths to dataframe
-auc_meta_components <- strsplit(gsub("\\\\[|\\\\]", "", auc_meta_string), ";")[[1]]
-auc_path_components <- strsplit(auc_path_string, ";")[[1]]
-
-auc_data <- lapply(1:length(auc_meta_components), function(i) {
-  auc_meta_parsed <- auc_parse_meta(auc_meta_components[i])
-  list("scenario" = auc_meta_parsed\$scenario,
-       "run" = auc_meta_parsed\$run,
-       "path" = auc_path_components[i])
-})
-auc_paths_df <- do.call(rbind, lapply(auc_data, as.data.frame))
-
-# Read PRC paths into prc data table
-prc <- data.table(precision = numeric(), recall = numeric(), method = character(), scenario = character())
-for (i in 1:nrow(prc_paths_df)) {
-  prc_per_method <- fread(prc_paths_df[i,]\$path)
-  prc_per_method\$method <- prc_paths_df[i,]\$method
-  prc_per_method\$scenario <- prc_paths_df[i,]\$scenario
-  prc <- rbind(prc, prc_per_method)
-}
-
-# Read AUC paths into auc data table
-auc <- data.table(method = character(), auc = numeric(), scenario = character())
-for (scenario in unique(auc_paths_df\$scenario)) {
-  files.auc <- auc_paths_df[auc_paths_df\$scenario == scenario,]\$path
+plot_prc_of_scenario <- function(df, scenario) {
+  files_for_scenario <- df[df\$scenario == scenario,]
+  prc <- data.table(precision = numeric(), recall = numeric(), method = character())
   
-  dfs <- list()
-  for (file in files.auc) {
-    dfs <- append(dfs, list(fread(file)))
+  for (i in 1:nrow(files_for_scenario)) {
+    prc_per_method <- fread(files_for_scenario[i,]\$path)
+    prc_per_method\$method <- files_for_scenario[i,]\$method
+    prc <- rbind(prc, prc_per_method)
   }
   
-  df.per.scenario <- rbindlist(dfs)
-  df.per.scenario\$scenario <- scenario
+  prc\$method <- factor(prc\$method, levels = c("deseq2", "hierarchical-bootstrapping", "mast", "permutation-test", "distinct", "scvi", "dream"))
   
-auc <- rbind(auc, df.per.scenario)
+  prc <- na.omit(prc)
+  prc <- prc[(recall != 0 | precision != 0)]
+  
+  color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi"), 
+                           color = c(1:6), 
+                           hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00"),
+                           method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI"))
+  
+  # Remove distinct as those are bad values
+  prc <- prc[method != "distinct"]
+  
+  
+  # Factorize method column to fit colors
+  prc\$method <- factor(prc\$method, levels = color.code\$method)
+  
+  # Compute AUC of the curves
+  auc.deseq2 <- round(trapz(prc[method == 'deseq2', recall], prc[method == 'deseq2', precision]), 3)
+  auc.mast <- round(trapz(prc[method == 'mast', recall], prc[method == 'mast', precision]), 3)
+  auc.hb <- round(trapz(prc[method == 'hierarchical-bootstrapping', recall], prc[method == 'hierarchical-bootstrapping', precision]), 3)
+  auc.perm <- round(trapz(prc[method == 'permutation-test', recall], prc[method == 'permutation-test', precision]), 3)
+  auc.scvi <- round(trapz(prc[method == 'scvi', recall], prc[method == 'scvi', precision]), 3)
+  auc.dream <- round(trapz(prc[method == 'dream', recall], prc[method == 'dream', precision]), 3)
+  
+  
+  p <- ggplot(prc, aes(x = recall, y = precision, color = method)) +
+    geom_line(linewidth = 0.8) +
+    xlim(0, 1) +
+    ylim(0, 1) +
+    geom_hline(yintercept = tail(prc\$precision, n = 1), linetype = "dashed", color = "red") +
+    labs(x = "Recall", y = "Precision", color = 'Method') +
+    annotate("text", x = 0.1, y = 0.63, label = "AUC:", size = 4, color = "black") +
+    annotate("text", x = 0.1, y = 0.56, label = paste(auc.deseq2), size = 4, color = color.code[method == "deseq2", hex]) +
+    annotate("text", x = 0.1, y = 0.49, label = paste(auc.dream), size = 4, color = color.code[method == "dream", hex]) +
+    annotate("text", x = 0.1, y = 0.42, label = paste(auc.hb), size = 4, color = color.code[method == "hierarchical-bootstrapping", hex]) +
+    annotate("text", x = 0.1, y = 0.35, label = paste(auc.mast), size = 4, color = color.code[method == "mast", hex]) +
+    annotate("text", x = 0.1, y = 0.28, label = paste(auc.perm), size = 4, color = color.code[method == "permutation-test", hex]) +
+    annotate("text", x = 0.1, y = 0.21, label = paste(auc.scvi), size = 4, color = color.code[method == "scvi", hex]) +
+    scale_color_okabe_ito(order = color.code\$color, labels = color.code\$method_legend) +
+    theme_cowplot() +
+    theme(axis.title.x = element_text(size = 12),
+          axis.text.x = element_text(size = 12),
+          axis.title.y = element_text(size = 12),
+          axis.text.y = element_text(size = 10))
+
+  return(p)
 }
-auc <- auc[method == "distinct"]
 
-color.code <- data.table(scenario = c("atlas", "atlas-ub-conditions", "dataset", "dataset-ub-cells"), 
-                         color = c(1:4), 
-                         scenario_legend = c("Atlas", "Atlas (unbalanced conditions)", "Dataset", "Dataset (unbalanced cells)"))
+df <- parse_path_string_into_dataframe(path_string)
 
-auc.ordered <- auc[,.(median_auc = median(auc)), by = "scenario"][order(median_auc, decreasing = T)]
-
-color.code.auc <- merge(auc.ordered, color.code, by = "scenario", sort = F)
-
-prc\$scenario <- factor(prc\$scenario, levels = color.code.auc\$scenario)
-auc\$scenario <- factor(auc\$scenario, levels = color.code.auc\$scenario)
-
-
-plot.prc <- ggplot(prc, aes(x = recall, y = precision, color = scenario)) +
-  geom_hline(yintercept = 0.05, color = "red", linetype = "dashed") +
-  geom_line() +
-  ylim(0, 1) +
-  scale_color_okabe_ito(order = color.code.auc\$color, labels = color.code.auc\$scenario_legend) +
-  labs(x = "Recall", y = "Precision", color = "Scenario") +
-  theme_cowplot()
-
-plot.auc <- ggplot(auc, aes(x = scenario, y = auc, color = scenario)) +
-  geom_hline(yintercept = 0.05, color = "red", linetype = "dashed") + 
-  geom_boxplot() +
-  ylim(0, 1) +
-  labs(color = "Scenario", y = "AUPRC") +
-  scale_color_okabe_ito(order = color.code.auc\$color, labels = color.code.auc\$scenario_legend) +
-  theme_cowplot() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
+p.dataset <- plot_prc_of_scenario(df, "dataset")
+p.dataset.ub <- plot_prc_of_scenario(df, "dataset-ub-cells")
+p.atlas <- plot_prc_of_scenario(df, "atlas")
+p.atlas.ub <- plot_prc_of_scenario(df, "atlas-ub-conditions")
 
 p <- plot_grid(
-  plot_grid(plot.prc + theme(legend.position = "none"),
-            plot.auc + theme(legend.position = "none"),
+  plot_grid(p.atlas + theme(axis.title.x = element_blank(),
+                            legend.position = "none"),
+            p.atlas.ub + theme(axis.title.y = element_blank(),
+                               axis.title.x = element_blank(),
+                               legend.position = "none"),
+            p.dataset + theme(legend.position = "none"),
+            p.dataset.ub + theme(axis.title.y = element_blank(),
+                                 legend.position = "none"),
             labels = "AUTO",
             label_size = 20,
             ncol = 2,
@@ -120,20 +111,26 @@ p <- plot_grid(
             label_y = 1,
             hjust = -0.1,
             vjust = 1.1,
-            align = "hv",
-            rel_widths = c(1, 1.1)),
-  get_legend(plot.prc +
-               theme(legend.text = element_text(size = 10),
-                     legend.title = element_text(size = 14),
-                     legend.spacing.x = unit(1.0, "cm"),
+            align = "hv"),
+  get_legend(p.atlas +
+               theme(legend.text = element_text(size = 11),
+                     legend.title = element_text(size = 15),
+                     legend.spacing.x = unit(0.5, "cm"),
                      legend.title.align = 0.5,
-                     legend.position=c(0.2, 0.6)) +
-               guides(color = guide_legend(ncol = 2))),
-  ncol = 1,
-  rel_heights = c(1, 0.2)
+                     legend.position=c(0.3, 0.6)) +
+               guides(color = guide_legend(ncol = 3))),
+  nrow = 2,
+  rel_heights = c(1, 0.3),
+  vjust = -10
 )
 
-ggsave(p, filename = "Fig_S07_run${meta_prc.run}.png", width = 3606, height = 1950, units = "px", dpi = 400)
+ggsave(p, width = 3606, height = 4096, units = "px", dpi = 400, filename = "Fig_S07_run${meta.run}.png")
+
+
+
+
+
+
 
 
 

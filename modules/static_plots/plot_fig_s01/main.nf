@@ -1,7 +1,7 @@
 process PLOT_FIG_S01 {
     container 'leonhafner/plotting'
 
-    publishDir "${params.output}", mode: 'copy'
+    publishDir "${params.output}/Fig_S01", mode: 'copy'
 
     input:
     path 'Fig_S01.png'

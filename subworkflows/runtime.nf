@@ -1,16 +1,16 @@
 include { addRuntimeToMeta } from '../subworkflows/utils'
-include { SIMULATION } from '../modules/runtime/simulation/main'
-include { PREPROCESSING } from '../modules/runtime/preprocessing/main'
-include { PSEUDOBULKING } from '../modules/runtime/pseudobulking/main'
-include { MAST } from '../modules/runtime/mast/main'
-include { DISTINCT } from '../modules/runtime/distinct/main'
-include { DESEQ2 } from '../modules/runtime/deseq2/main'
-include { PERMUTATION_TEST } from '../modules/runtime/permutation_test/main'
-include { HIERARCHICAL_BOOTSTRAPPING } from '../modules/runtime/hierarchical_bootstrapping/main'
-include { SCVI } from '../modules/runtime/scvi/main'
-include { DREAM } from '../modules/runtime/dream/main'
-include { PREPARE_FIG_04 } from '../modules/runtime/prepare_fig_04/main'
-include { PLOT_FIG_04 } from '../modules/runtime/plot_fig_04/main'
+include { SIMULATION } from '../modules/runtime/simulation'
+include { PREPROCESSING } from '../modules/runtime/preprocessing'
+include { PSEUDOBULKING } from '../modules/runtime/pseudobulking'
+include { MAST } from '../modules/runtime/mast'
+include { DISTINCT } from '../modules/runtime/distinct'
+include { DESEQ2 } from '../modules/runtime/deseq2'
+include { PERMUTATION_TEST } from '../modules/runtime/permutation_test'
+include { HIERARCHICAL_BOOTSTRAPPING } from '../modules/runtime/hierarchical_bootstrapping'
+include { SCVI } from '../modules/runtime/scvi'
+include { DREAM } from '../modules/runtime/dream'
+include { PREPARE_FIG_06 } from '../modules/runtime/prepare_fig_06'
+include { PLOT_FIG_06 } from '../modules/runtime/plot_fig_06'
 
 
 workflow RUNTIME {
@@ -81,7 +81,7 @@ workflow RUNTIME {
             .groupTuple()
             .map{key, meta -> meta.flatten().sum()}
 
-        PREPARE_FIG_04(ch_combined.collect())
+        PREPARE_FIG_06(ch_combined.collect())
 
-        PLOT_FIG_04(PREPARE_FIG_04.out.fixed_cells, PREPARE_FIG_04.out.fixed_genes)
+        PLOT_FIG_06(PREPARE_FIG_06.out.fixed_cells, PREPARE_FIG_06.out.fixed_genes)
 }

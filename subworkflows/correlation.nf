@@ -1,7 +1,7 @@
-include { SIMULATION } from '../modules/performance/simulation/main'
-include { UNCORRELATED_GENES } from '../modules/correlation/uncorrelated_genes/main'
-include { CORRELATIONS } from '../modules/correlation/correlations/main'
-include { PLOT_FIG_03 } from '../modules/correlation/plot_fig_03/main'
+include { SIMULATION } from '../modules/performance/simulation'
+include { UNCORRELATED_GENES } from '../modules/correlation/uncorrelated_genes'
+include { CORRELATIONS } from '../modules/correlation/correlations'
+include { PLOT_FIG_S09 } from '../modules/correlation/plot_fig_s09'
 
 workflow CORRELATION {
     take:
@@ -18,5 +18,5 @@ workflow CORRELATION {
 
         CORRELATIONS(UNCORRELATED_GENES.out)
 
-        PLOT_FIG_03(CORRELATIONS.out.map{meta, tsv -> tsv}.collect())
+        PLOT_FIG_S09(CORRELATIONS.out.map{meta, tsv -> tsv}.collect())
 }
