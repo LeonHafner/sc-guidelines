@@ -52,14 +52,17 @@ dataframe\$less_de <- grepl("-less-de", dataframe\$scenario)
 # Remove less-de information stored in the scenario column
 dataframe\$scenario <- gsub("-less-de", "", dataframe\$scenario)
 
+# Factorize scenario for right order of the plots
+dataframe\$scenario <- factor(dataframe\$scenario, levels = c("dataset", "atlas", "dataset-ub-cells", "atlas-ub-conditions"))
+
 # Custom labeling function
 custom_labels <- function(variable, value) {
   # Define custom labels based on 'category'
   labels <- c(
-    atlas = "Atlas",
-    atlas_ub_conditions = "Atlas with unbalanced conditions",
     dataset = "Dataset",
-    dataset_ub_cells = "Dataset with varying cell numbers"
+    atlas = "Atlas",
+    dataset_ub_cells = "Dataset with varying cell numbers",
+    atlas_ub_conditions = "Atlas with unbalanced conditions"
   )
   return(labels[value])
 }
