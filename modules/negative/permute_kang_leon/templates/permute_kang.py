@@ -17,6 +17,4 @@ for batch in adata.obs['Batch'].unique():
 adata = ad.concat(adatas)
 adata.obs['Sample'] = adata.obs['Batch'].astype(str) + '-' + adata.obs['Condition'].astype(str)
 
-adata = adata[random.sample(adata.obs.index.tolist(), 1000)]
-
 adata.write('kang2018.h5ad')
