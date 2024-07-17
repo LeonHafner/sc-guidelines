@@ -1,6 +1,5 @@
 include { SIMULATION } from '../modules/performance/simulation'
-include { PERMUTE_KANG } from '../modules/negative/permute_kang_leon'
-//include { PERMUTE_KANG } from '../modules/negative/permute_kang_gregor'
+include { PERMUTE_KANG } from '../modules/negative/permute_kang'
 include { PREPROCESSING } from '../modules/performance/preprocessing'
 include { PSEUDOBULKING } from '../modules/performance/pseudobulking'
 include { MAST } from '../modules/performance/mast'

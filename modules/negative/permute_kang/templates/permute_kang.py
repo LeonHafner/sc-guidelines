@@ -4,6 +4,8 @@ import scanpy as sc
 import anndata as ad
 import random
 
+random.seed(0)
+
 adata = sc.read("${input_anndata}")
 
 adatas = []

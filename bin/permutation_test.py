@@ -113,6 +113,8 @@ def permutation(
 
 adata = sc.read_h5ad(file_in)
 
+sc.pp.normalize_total(adata, target_sum=1e6)
+
 group1 = "Condition1"
 group2 = "Condition2"
 
