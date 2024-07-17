@@ -165,9 +165,26 @@ def _get_idx(adata, mask, level_sample, hierarchy, sample_size):
     return idx
 
 
+def eval_hb(adata, var):
+    X = adata.X
+
+    mask_var = adata.var.index == var
+    one_over_two = 0
+    two_over_one = 0
+
+    # Iterate over bootstrap samples
+    for i in range(0, len(adata.obs_names), 2):
+        if X[i, mask_var] > X[i + 1, mask_var]:
+            one_over_two += 1
+        else:
+            two_over_one += 1
+
+    return min(one_over_two / (adata.shape[0] / 2), two_over_one / (adata.shape[0] / 2))
 
 
 adata = sc.read_h5ad(file_in)
+
+sc.pp.normalize_total(adata, target_sum=1e6)
 
 if scenario in ["atlas", "atlas_hvg", "atlas-less-de"]:
     adata_hb = bootstrap(adata=adata,
@@ -217,23 +234,6 @@ elif scenario in ["dataset-ub-cells", "dataset-ub-cells_hvg", "dataset-ub-cells-
                          aggr_func=np.mean,
                          use_raw=False,
                          n=10_000)
-    
-
-def eval_hb(adata, var):
-    X = adata.X
-
-    mask_var = adata.var.index == var
-    one_over_two = 0
-    two_over_one = 0
-
-    # Iterate over bootstrap samples
-    for i in range(0, len(adata.obs_names), 2):
-        if X[i, mask_var] > X[i + 1, mask_var]:
-            one_over_two += 1
-        else:
-            two_over_one += 1
-
-    return min(one_over_two / (adata.shape[0] / 2), two_over_one / (adata.shape[0] / 2))
 
 
 p_values = {}
@@ -255,6 +255,8 @@ pvalues_old = pvalues['pvalue']
 test_genes = pvalues[pvalues_old == 0].index
 
 adata = sc.read_h5ad(file_in)
+
+sc.pp.normalize_total(adata, target_sum=1e6)
 
 # Subset adata to necessary genes only
 adata = adata[:,np.isin(adata.var.index, test_genes)]

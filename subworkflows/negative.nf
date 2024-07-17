@@ -1,4 +1,5 @@
 include { SIMULATION } from '../modules/performance/simulation'
+include { PERMUTE_KANG } from '../modules/negative/permute_kang'
 include { PREPROCESSING } from '../modules/performance/preprocessing'
 include { PSEUDOBULKING } from '../modules/performance/pseudobulking'
 include { MAST } from '../modules/performance/mast'
@@ -28,7 +29,9 @@ workflow NEGATIVE {
         
         SIMULATION(ch_meta, n_genes)
 
-        ch_input_preprocessing = SIMULATION.out.mix(ch_kang)
+        PERMUTE_KANG(ch_kang)
+
+        ch_input_preprocessing = SIMULATION.out.mix(PERMUTE_KANG.out)
 
         PREPROCESSING(ch_input_preprocessing, preprocessing_threshold)
 
