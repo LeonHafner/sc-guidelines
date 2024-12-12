@@ -72,7 +72,7 @@ p <- ggplot(dataframe, aes(x = method, y = auc, fill = less_de)) +
   geom_boxplot() +
   ylim(0, 1) +
   scale_fill_manual(values = c("#FF7F00", "#1F78B4"), labels = c("5%", "0.5%")) +
-  scale_x_discrete(labels = c("DESeq2", "distinct", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI")) +
+  scale_x_discrete(labels = c("DESeq2", "distinct", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "t-test")) +
   labs(x = "Method", y = "AUPRC", fill = "Percentage\nof DE genes") +
   facet_wrap(~ scenario, labeller = labeller(scenario = custom_labels)) +
   theme_cowplot() +

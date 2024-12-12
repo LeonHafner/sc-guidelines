@@ -22,6 +22,7 @@ process PRECISION_RECALL {
     touch prc_${meta.scenario}_${meta.run}_distinct.tsv
     touch prc_${meta.scenario}_${meta.run}_hierarchical-bootstrapping.tsv
     touch prc_${meta.scenario}_${meta.run}_permutation-test.tsv
+    touch prc_${meta.scenario}_${meta.run}_ttest.tsv
 
     touch auc_${meta.scenario}_${meta.run}.tsv
     """

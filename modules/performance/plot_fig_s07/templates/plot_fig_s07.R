@@ -39,15 +39,15 @@ plot_prc_of_scenario <- function(df, scenario) {
     prc <- rbind(prc, prc_per_method)
   }
   
-  prc\$method <- factor(prc\$method, levels = c("deseq2", "hierarchical-bootstrapping", "mast", "permutation-test", "distinct", "scvi", "dream"))
+  prc\$method <- factor(prc\$method, levels = c("deseq2", "hierarchical-bootstrapping", "mast", "permutation-test", "distinct", "scvi", "dream", "ttest"))
   
   prc <- na.omit(prc)
   prc <- prc[(recall != 0 | precision != 0)]
   
-  color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi"), 
-                           color = c(1:6), 
-                           hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00"),
-                           method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI"))
+  color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "ttest"), 
+                           color = c(1:7), 
+                           hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#21130d"),
+                           method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "t-test"))
   
   # Remove distinct as those are bad values
   prc <- prc[method != "distinct"]
@@ -63,6 +63,7 @@ plot_prc_of_scenario <- function(df, scenario) {
   auc.perm <- round(trapz(prc[method == 'permutation-test', recall], prc[method == 'permutation-test', precision]), 3)
   auc.scvi <- round(trapz(prc[method == 'scvi', recall], prc[method == 'scvi', precision]), 3)
   auc.dream <- round(trapz(prc[method == 'dream', recall], prc[method == 'dream', precision]), 3)
+  auc.ttest <- round(trapz(prc[method == 'ttest', recall], prc[method == 'ttest', precision]), 3)
   
   
   p <- ggplot(prc, aes(x = recall, y = precision, color = method)) +
@@ -78,6 +79,7 @@ plot_prc_of_scenario <- function(df, scenario) {
     annotate("text", x = 0.1, y = 0.35, label = paste(auc.mast), size = 4, color = color.code[method == "mast", hex]) +
     annotate("text", x = 0.1, y = 0.28, label = paste(auc.perm), size = 4, color = color.code[method == "permutation-test", hex]) +
     annotate("text", x = 0.1, y = 0.21, label = paste(auc.scvi), size = 4, color = color.code[method == "scvi", hex]) +
+    annotate("text", x = 0.1, y = 0.14, label = paste(auc.ttest), size = 4, color = color.code[method == "ttest", hex]) +
     scale_color_okabe_ito(order = color.code\$color, labels = color.code\$method_legend) +
     theme_cowplot() +
     theme(axis.title.x = element_text(size = 12),
