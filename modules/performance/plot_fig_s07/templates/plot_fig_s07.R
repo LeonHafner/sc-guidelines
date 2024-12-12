@@ -46,7 +46,7 @@ plot_prc_of_scenario <- function(df, scenario) {
   
   color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "ttest"), 
                            color = c(1:7), 
-                           hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#21130d"),
+                           hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"),
                            method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "t-test"))
   
   # Remove distinct as those are bad values

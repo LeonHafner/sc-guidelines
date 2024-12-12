@@ -26,9 +26,9 @@ results.genes.fixed\$dream <- results.genes.fixed\$dream + results.genes.fixed\$
 
 
 # Unified color coding of the methods
-color.code <- data.table(method = c("deseq2", "dream", "hierarchical_bootstrapping", "mast", "permutation_test", "scvi", "distinct", "ttest"), 
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical_bootstrapping", "mast", "permutation_test", "scvi", "ttest", "distinct"), 
                          color = c(1:8), 
-                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "t-test"))
+                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "t-test", "distinct"))
 
 
 # Melt and filter data for the right columns

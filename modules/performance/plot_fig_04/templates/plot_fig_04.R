@@ -43,10 +43,10 @@ prc <- prc[(recall != 0 | precision != 0)]
 
 
 # Unified color coding of the methods
-color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct"), 
-                         color = c(1:7),
-                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"),
-                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct"))
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "ttest", "distinct"), 
+                         color = c(1:8),
+                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999"),
+                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "t-test", "distinct"))
 
 # Factorize method column to fit colors
 prc\$method <- factor(prc\$method, levels = color.code\$method)
@@ -59,6 +59,7 @@ auc.hb <- round(trapz(prc[method == 'hierarchical-bootstrapping', recall], prc[m
 auc.perm <- round(trapz(prc[method == 'permutation-test', recall], prc[method == 'permutation-test', precision]), 3)
 auc.scvi <- round(trapz(prc[method == 'scvi', recall], prc[method == 'scvi', precision]), 3)
 auc.dream <- round(trapz(prc[method == 'dream', recall], prc[method == 'dream', precision]), 3)
+auc.ttest <- round(trapz(prc[method == 'ttest', recall], prc[method == 'ttest', precision]), 3)
 auc.distinct <- round(trapz(prc[method == 'distinct', recall], prc[method == 'distinct', precision]), 3)
 
 p <- ggplot(prc, aes(x = recall, y = precision, color = method)) +
@@ -72,7 +73,8 @@ p <- ggplot(prc, aes(x = recall, y = precision, color = method)) +
   annotate("text", x = 0.75, y = 0.49, label = paste(auc.mast), size = 5, color = color.code[method == "mast", hex]) +
   annotate("text", x = 0.75, y = 0.42, label = paste(auc.perm), size = 5, color = color.code[method == "permutation-test", hex]) +
   annotate("text", x = 0.75, y = 0.35, label = paste(auc.scvi), size = 5, color = color.code[method == "scvi", hex]) +
-  annotate("text", x = 0.75, y = 0.28, label = paste(auc.distinct), size = 5, color = color.code[method == "distinct", hex]) +
+  annotate("text", x = 0.75, y = 0.28, label = paste(auc.ttest), size = 5, color = color.code[method == "ttest", hex]) +
+  annotate("text", x = 0.75, y = 0.21, label = paste(auc.distinct), size = 5, color = color.code[method == "distinct", hex]) +
   scale_color_okabe_ito(order = color.code\$color, labels = color.code\$method_legend) +
   coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) +
   theme_cowplot(16) +

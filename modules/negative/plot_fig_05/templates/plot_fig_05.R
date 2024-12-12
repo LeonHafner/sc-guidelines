@@ -8,9 +8,9 @@ library(cowplot)
 data.sim <- fread("${plotting_data}")
 data.sim <- melt(data.sim, id.vars = "pvals", variable.name = "method", value.name = "fpr")
 
-color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"), 
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "ttest", "distinct"), 
                         color = c(1:8), 
-                        method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "t-test"))
+                        method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "t-test", "distinct"))
 
 
 data.sim\$method <- factor(data.sim\$method, levels = color.code\$method)

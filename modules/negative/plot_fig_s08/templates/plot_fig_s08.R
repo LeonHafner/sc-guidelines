@@ -11,9 +11,9 @@ data.real <- fread("${plotting_data_kang}")
 data.sim <- melt(data.sim, id.vars = "pvals", variable.name = "method", value.name = "fpr")
 data.real <- melt(data.real, id.vars = "pvals", variable.name = "method", value.name = "fpr")
 
-color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"), 
-                        color = c(1:8), 
-                        method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "t-test"))
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "ttest"), 
+                        color = c(1:7), 
+                        method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "t-test"))
 
 
 # Factorize methods to get the same color across all plots
