@@ -97,7 +97,7 @@ adata = sc.read_h5ad(file_in)
 match scenario:
     case 'atlas' | 'atlas_hvg' | 'atlas-less-de' | 'atlas-negative':
         groupby = ['Batch', 'Sample', 'Condition']
-    case 'dataset' | 'dataset_hvg' | 'dataset-less-de':
+    case 'dataset' | 'dataset_hvg' | 'dataset-less-de' | 'luca':
         groupby = ['Sample', 'Condition']
     case 'atlas-ub-conditions' | 'atlas-ub-conditions_hvg' | 'atlas-ub-conditions-less-de':
         groupby = ['Batch', 'Sample', 'Condition']

@@ -38,6 +38,10 @@ exprsArray.log <- log2(exprsArray + 1)
 
 sca <- FromMatrix(exprsArray = exprsArray.log, cData = cData, fData = fData, check_sanity = F)
 
+if (scenario == "luca") {
+    colData(sca)$Batch <- "Batch1"
+}
+
 colData(sca)$Batch <- factor(colData(sca)$Batch)
 colData(sca)$Condition <- factor(colData(sca)$Condition)
 colData(sca)$Sample <- factor(colData(sca)$Sample)
@@ -54,11 +58,16 @@ if (scenario %in% c("atlas", "atlas_hvg", "atlas-less-de")) {
   zlmCond <- zlm(~ Condition + Batch + (1 | Sample), sca, method = "glmer", ebayes = F, strictConvergence = F)
 } else if (scenario %in% c("dataset-ub-cells", "dataset-ub-cells_hvg", "dataset-ub-cells-less-de")) {
   zlmCond <- zlm(~ Condition + (1 | Sample), sca, method = "glmer", ebayes = F, strictConvergence = F)
+} else if (scenario == "luca") {
+  zlmCond <- zlm(~ Condition + (1 | Sample), sca, method = "glmer", ebayes = F, strictConvergence = F)
 }
 
 print("Finished zlm")
-
-summaryCond <- MAST::summary(zlmCond, doLRT = 'ConditionCondition2')
+if (scenario == "luca") {
+    summaryCond <- MAST::summary(zlmCond, doLRT = 'Conditionsquamous_cell_lung_carcinoma')
+} else {
+    summaryCond <- MAST::summary(zlmCond, doLRT = 'ConditionCondition2')
+}
 summaryDt <- summaryCond$datatable
 
 write.table(summaryDt, file = output, sep = '\t', row.names = FALSE)

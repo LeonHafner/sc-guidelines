@@ -39,15 +39,17 @@ plot_prc_of_scenario <- function(df, scenario) {
     prc <- rbind(prc, prc_per_method)
   }
   
-  prc\$method <- factor(prc\$method, levels = c("deseq2", "hierarchical-bootstrapping", "mast", "permutation-test", "distinct", "scvi", "dream", "ttest"))
+  prc\$method <- factor(prc\$method, levels = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"))
   
   prc <- na.omit(prc)
   prc <- prc[(recall != 0 | precision != 0)]
   
-  color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "ttest"), 
-                           color = c(1:7), 
-                           hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"),
-                           method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "t-test"))
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"), 
+                         color = c(1, 2, 3, 4, 5, 6, 7, 9),
+                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"),
+                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "t-test"))
+
+color.code <- color.code[method != "distinct"]
   
   # Remove distinct as those are bad values
   prc <- prc[method != "distinct"]

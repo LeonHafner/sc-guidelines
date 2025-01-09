@@ -27,5 +27,9 @@ workflow {
         params.performance.n_genes,
         params.performance.hvg_ratio,
         params.performance.preprocessing_threshold,
+
+        params.reproducibility_enabled,
+        params.reproducibility_lung_cancer_atlas,
+        params.reproducibility_preprocessing_threshold
     )
 }

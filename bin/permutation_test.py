@@ -115,9 +115,12 @@ adata = sc.read_h5ad(file_in)
 
 sc.pp.normalize_total(adata, target_sum=1e6)
 
-group1 = "Condition1"
-group2 = "Condition2"
-
+if scenario == "luca":
+    group1 = "lung_adenocarcinoma"
+    group2 = "squamous_cell_lung_carcinoma"
+else:
+    group1 = "Condition1"
+    group2 = "Condition2"
 
 p_values = {}
 for gene in tqdm(adata.var.index):

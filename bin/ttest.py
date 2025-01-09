@@ -15,7 +15,7 @@ sc.pp.log1p(adata)
 sc.tl.rank_genes_groups(adata, groupby="Condition", method="t-test")
 
 results = adata.uns["rank_genes_groups"]
-group = "Condition1"
+group = "Condition1" if "Condition1" in [name for name, _ in results["names"].dtype.descr] else "lung_adenocarcinoma"
 
 genes = results['names'][group]
 pvals = results['pvals'][group]

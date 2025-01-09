@@ -24,14 +24,15 @@ for meta, path in zip(meta_string.split(';'), path_string.split(';')):
 
     method = meta['method']
     match method:
-        case 'hierarchical-bootstrapping' | 'permutation-test' | 'deseq2' | 'ttest':
+        case 'hierarchical-bootstrapping' | 'permutation-test' | 'deseq2' | 'ttest' | 'scdd':
             res = pd.read_csv(path, sep='\\t', index_col=0)['pvalue']
         case 'distinct':
             res = pd.read_csv(path, sep='\\t', index_col=0)['p_val'].rename('pvalue')
         case 'mast':
             output = pd.read_csv(path, sep = '\\t')
-            pval = output[np.logical_and(output['component'] == 'H',output['contrast'] == 'ConditionCondition2')]
-            logfc = output[np.logical_and(output['component'] == 'logFC', output['contrast'] == 'ConditionCondition2')]
+            contrast = 'ConditionCondition2' if 'ConditionCondition2' in output['contrast'].values else 'Conditionsquamous_cell_lung_carcinoma'
+            pval = output[np.logical_and(output['component'] == 'H',output['contrast'] == contrast)]
+            logfc = output[np.logical_and(output['component'] == 'logFC', output['contrast'] == contrast)]
             res = pd.merge(pval, logfc, on='primerid', suffixes=('_pval', '_logfc')).set_index('primerid')
             res = res['Pr(>Chisq)_pval'].rename('pvalue')
         case 'scvi':
@@ -41,6 +42,7 @@ for meta, path in zip(meta_string.split(';'), path_string.split(';')):
         case _:
             raise ValueError(f'Wrong method and file: {method} / {path}')
 
+    assert len(res) != 0
     pvalues[method] = res
 
 

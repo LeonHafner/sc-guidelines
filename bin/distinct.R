@@ -38,6 +38,11 @@ data.norm <- logNormCounts(data)
 
 colData(data.norm)$Group <- "Group1"
 colData <- as.data.frame(colData(data.norm))
+
+if (scenario == "luca") {
+    colData$Batch <- "Batch1"
+}
+
 unique.samples <- unique(colData[,c("Batch", "Sample", "Condition")])
 
 batch <- unique.samples$Batch
@@ -55,6 +60,8 @@ if (scenario %in% c("atlas", "atlas_hvg", "atlas-less-de")) {
 } else if (scenario == "kang2018"){
   design <- model.matrix(~ condition + batch)
 } else if (scenario %in% c("dataset-ub-cells", "dataset-ub-cells_hvg", "dataset-ub-cells-less-de")) {
+  design <- model.matrix(~ condition)
+} else if (scenario == "luca") {
   design <- model.matrix(~ condition)
 }
 

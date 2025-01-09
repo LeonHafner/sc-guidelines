@@ -234,7 +234,14 @@ elif scenario in ["dataset-ub-cells", "dataset-ub-cells_hvg", "dataset-ub-cells-
                          aggr_func=np.mean,
                          use_raw=False,
                          n=10_000)
-
+elif scenario == "luca":
+    adata_hb = bootstrap(adata=adata,
+                         groupby='Condition',
+                         hierarchy=['Sample'],
+                         sample_size=[200],
+                         aggr_func=np.mean,
+                         use_raw=False,
+                         n=10_000)
 
 p_values = {}
 
@@ -302,6 +309,14 @@ elif scenario == "kang2018":
                          use_raw=False,
                          n=100_000)
 elif scenario in ["dataset-ub-cells", "dataset-ub-cells_hvg", "dataset-ub-cells-less-de"]:
+    adata_hb = bootstrap(adata=adata,
+                         groupby='Condition',
+                         hierarchy=['Sample'],
+                         sample_size=[200],
+                         aggr_func=np.mean,
+                         use_raw=False,
+                         n=100_000)
+elif scenario == "luca":
     adata_hb = bootstrap(adata=adata,
                          groupby='Condition',
                          hierarchy=['Sample'],
