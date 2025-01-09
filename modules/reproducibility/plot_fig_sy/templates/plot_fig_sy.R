@@ -71,10 +71,10 @@ for (N in seq_len(num_genes)) {
 
 line_df <- do.call(rbind, results)
 
-color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"), 
-                         color = c(1, 2, 3, 4, 5, 6, 7, 9),
-                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"),
-                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "t-test"))
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "scdd", "ttest"), 
+                         color = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999", "#000000"),
+                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "scDD", "t-test"))
 
 line_df\$Method <- factor(line_df\$Method, levels = color.code\$method)
 

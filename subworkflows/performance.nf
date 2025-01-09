@@ -11,6 +11,7 @@ include { PERMUTATION_TEST } from '../modules/performance/permutation_test'
 include { HIERARCHICAL_BOOTSTRAPPING } from '../modules/performance/hierarchical_bootstrapping'
 include { SCVI } from '../modules/performance/scvi'
 include { DREAM } from '../modules/performance/dream'
+include { SCDD } from '../modules/performance/scdd'
 include { TTEST } from '../modules/performance/ttest'
 include { PVALUES } from '../modules/performance/pvalues'
 include { PRECISION_RECALL } from '../modules/performance/precision_recall'
@@ -85,6 +86,7 @@ workflow PERFORMANCE {
         DESEQ2(PSEUDOBULKING.out.mix(ch_pseudobulking_fixed_effect_comparison))
         PERMUTATION_TEST(PSEUDOBULKING.out)
         DREAM(PSEUDOBULKING.out.mix(ch_pseudobulking_fixed_effect_comparison))
+        SCDD(ch_methods_input)
         TTEST(ch_methods_input)
 
         // Mix all channels, introduce grouping criterion 'scenario_run', group them by 'scenario_run' and remove the grouping criterion at the end
@@ -96,6 +98,7 @@ workflow PERFORMANCE {
                 HIERARCHICAL_BOOTSTRAPPING.out,
                 SCVI.out,
                 DREAM.out,
+                SCDD.out,
                 TTEST.out)
             .map{meta, path -> [meta.scenario + '_' + meta.run, meta, path]}
             .groupTuple()

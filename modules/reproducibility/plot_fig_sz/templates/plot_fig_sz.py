@@ -22,6 +22,7 @@ METHOD_ORDER = [
     'permutation-test',
     'scvi',
     'distinct',
+    'scdd',
     'ttest'
 ]
 
@@ -33,6 +34,7 @@ METHOD_TO_LEGEND = {
     'permutation-test': 'Permutation\\nTest',
     'scvi': 'scVI',
     'distinct': 'distinct',
+    'scdd': 'scDD',
     'ttest': 't-test'
 }
 
@@ -40,7 +42,7 @@ METHOD_TO_LEGEND = {
 PALETTE = [
     "#E69F00", "#56B4E9", "#009E73",
     "#F0E442", "#0072B2", "#D55E00",
-    "#CC79A7", "#000000"
+    "#CC79A7", "#999999", "#000000"
 ]
 
 files = natsorted([f for f in os.listdir(DATA_DIR) if f.endswith(".tsv")])

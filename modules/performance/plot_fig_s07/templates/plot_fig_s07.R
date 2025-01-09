@@ -39,15 +39,15 @@ plot_prc_of_scenario <- function(df, scenario) {
     prc <- rbind(prc, prc_per_method)
   }
   
-  prc\$method <- factor(prc\$method, levels = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"))
+  prc\$method <- factor(prc\$method, levels = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "scdd", "ttest"))
   
   prc <- na.omit(prc)
   prc <- prc[(recall != 0 | precision != 0)]
   
-color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"), 
-                         color = c(1, 2, 3, 4, 5, 6, 7, 9),
-                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"),
-                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "t-test"))
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "scdd", "ttest"), 
+                         color = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999", "#000000"),
+                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "scDD", "t-test"))
 
 color.code <- color.code[method != "distinct"]
   
@@ -66,6 +66,7 @@ color.code <- color.code[method != "distinct"]
   auc.scvi <- round(trapz(prc[method == 'scvi', recall], prc[method == 'scvi', precision]), 3)
   auc.dream <- round(trapz(prc[method == 'dream', recall], prc[method == 'dream', precision]), 3)
   auc.ttest <- round(trapz(prc[method == 'ttest', recall], prc[method == 'ttest', precision]), 3)
+  auc.scdd <- round(trapz(prc[method == 'scdd', recall], prc[method == 'scdd', precision]), 3)
   
   
   p <- ggplot(prc, aes(x = recall, y = precision, color = method)) +
@@ -74,14 +75,15 @@ color.code <- color.code[method != "distinct"]
     ylim(0, 1) +
     geom_hline(yintercept = tail(prc\$precision, n = 1), linetype = "dashed", color = "red") +
     labs(x = "Recall", y = "Precision", color = 'Method') +
-    annotate("text", x = 0.1, y = 0.63, label = "AUC:", size = 4, color = "black") +
-    annotate("text", x = 0.1, y = 0.56, label = paste(auc.deseq2), size = 4, color = color.code[method == "deseq2", hex]) +
-    annotate("text", x = 0.1, y = 0.49, label = paste(auc.dream), size = 4, color = color.code[method == "dream", hex]) +
-    annotate("text", x = 0.1, y = 0.42, label = paste(auc.hb), size = 4, color = color.code[method == "hierarchical-bootstrapping", hex]) +
-    annotate("text", x = 0.1, y = 0.35, label = paste(auc.mast), size = 4, color = color.code[method == "mast", hex]) +
-    annotate("text", x = 0.1, y = 0.28, label = paste(auc.perm), size = 4, color = color.code[method == "permutation-test", hex]) +
-    annotate("text", x = 0.1, y = 0.21, label = paste(auc.scvi), size = 4, color = color.code[method == "scvi", hex]) +
-    annotate("text", x = 0.1, y = 0.14, label = paste(auc.ttest), size = 4, color = color.code[method == "ttest", hex]) +
+    annotate("text", x = 0.1, y = 0.70, label = "AUC:", size = 4, color = "black") +
+    annotate("text", x = 0.1, y = 0.63, label = paste(auc.deseq2), size = 4, color = color.code[method == "deseq2", hex]) +
+    annotate("text", x = 0.1, y = 0.56, label = paste(auc.dream), size = 4, color = color.code[method == "dream", hex]) +
+    annotate("text", x = 0.1, y = 0.49, label = paste(auc.hb), size = 4, color = color.code[method == "hierarchical-bootstrapping", hex]) +
+    annotate("text", x = 0.1, y = 0.42, label = paste(auc.mast), size = 4, color = color.code[method == "mast", hex]) +
+    annotate("text", x = 0.1, y = 0.35, label = paste(auc.perm), size = 4, color = color.code[method == "permutation-test", hex]) +
+    annotate("text", x = 0.1, y = 0.28, label = paste(auc.scvi), size = 4, color = color.code[method == "scvi", hex]) +
+    annotate("text", x = 0.1, y = 0.21, label = paste(auc.ttest), size = 4, color = color.code[method == "ttest", hex]) +
+    annotate("text", x = 0.1, y = 0.14, label = paste(auc.scdd), size = 4, color = color.code[method == "scdd", hex]) +
     scale_color_okabe_ito(order = color.code\$color, labels = color.code\$method_legend) +
     theme_cowplot() +
     theme(axis.title.x = element_text(size = 12),

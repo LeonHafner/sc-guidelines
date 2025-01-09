@@ -9,6 +9,7 @@ include { PERMUTATION_TEST } from '../modules/performance/permutation_test'
 include { HIERARCHICAL_BOOTSTRAPPING } from '../modules/performance/hierarchical_bootstrapping'
 include { SCVI } from '../modules/negative/scvi'
 include { DREAM } from '../modules/performance/dream'
+include { SCDD } from '../modules/performance/scdd'
 include { TTEST } from '../modules/performance/ttest'
 include { PVALUES } from '../modules/performance/pvalues'
 include { SCVI_PROCESSING } from '../modules/negative/scvi_processing'
@@ -45,6 +46,7 @@ workflow NEGATIVE {
         HIERARCHICAL_BOOTSTRAPPING(PREPROCESSING.out)
         SCVI(PREPROCESSING.out)
         DREAM(PSEUDOBULKING.out)
+        SCDD(PREPROCESSING.out)
         TTEST(PREPROCESSING.out)
 
         // Mix all channels (except scvi), introduce grouping criterion 'scenario_run', group them by 'scenario_run' and remove the grouping criterion at the end
@@ -55,6 +57,7 @@ workflow NEGATIVE {
                 PERMUTATION_TEST.out,
                 HIERARCHICAL_BOOTSTRAPPING.out,
                 DREAM.out,
+                SCDD.out,
                 TTEST.out)
             .map{meta, path -> [meta.scenario + '_' + meta.run, meta, path]}
             .groupTuple()

@@ -8,6 +8,7 @@ include { PERMUTATION_TEST } from '../modules/performance/permutation_test'
 include { HIERARCHICAL_BOOTSTRAPPING } from '../modules/performance/hierarchical_bootstrapping'
 include { SCVI } from '../modules/performance/scvi'
 include { DREAM } from '../modules/performance/dream'
+include { SCDD } from '../modules/performance/scdd'
 include { TTEST } from '../modules/performance/ttest'
 include { PVALUES } from '../modules/performance/pvalues'
 include { PLOT_FIG_SX } from '../modules/reproducibility/plot_fig_sx'
@@ -37,6 +38,7 @@ workflow REPRODUCIBILITY {
         HIERARCHICAL_BOOTSTRAPPING(PREPROCESSING.out)
         SCVI(PREPROCESSING.out)
         DREAM(PSEUDOBULKING.out)
+        SCDD(PREPROCESSING.out)
         TTEST(PREPROCESSING.out)
 
         ch_all_methods = MAST.out
@@ -47,6 +49,7 @@ workflow REPRODUCIBILITY {
                 HIERARCHICAL_BOOTSTRAPPING.out,
                 SCVI.out,
                 DREAM.out,
+                SCDD.out,
                 TTEST.out)
             .map{meta, path -> [meta.scenario + '_' + meta.run, meta, path]}
             .groupTuple()

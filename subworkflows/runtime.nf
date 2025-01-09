@@ -9,6 +9,7 @@ include { PERMUTATION_TEST } from '../modules/runtime/permutation_test'
 include { HIERARCHICAL_BOOTSTRAPPING } from '../modules/runtime/hierarchical_bootstrapping'
 include { SCVI } from '../modules/runtime/scvi'
 include { DREAM } from '../modules/runtime/dream'
+include { SCDD } from '../modules/runtime/scdd'
 include { TTEST } from '../modules/runtime/ttest'
 include { PREPARE_FIG_06 } from '../modules/runtime/prepare_fig_06'
 include { PLOT_FIG_06 } from '../modules/runtime/plot_fig_06'
@@ -67,6 +68,7 @@ workflow RUNTIME {
         HIERARCHICAL_BOOTSTRAPPING(ch_out_preprocessing)
         SCVI(ch_out_preprocessing)
         DREAM(ch_out_pseudobulking)
+        SCDD(ch_out_preprocessing)
         TTEST(ch_out_preprocessing)
 
         ch_out_mast = MAST.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'mast')}
@@ -76,10 +78,11 @@ workflow RUNTIME {
         ch_out_hierarchical_bootstrapping = HIERARCHICAL_BOOTSTRAPPING.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'hierarchical_bootstrapping')}
         ch_out_scvi = SCVI.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'scvi')}
         ch_out_dream = DREAM.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'dream')}
+        ch_out_scdd = SCDD.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'scdd')}
         ch_out_ttest = TTEST.out.map{meta, time_file -> addRuntimeToMeta(meta, time_file, 'ttest')}
         
         // Combine all channels, introduce grouping key, group by key and merge maps together
-        ch_combined = ch_out_mast.mix(ch_out_distinct, ch_out_deseq2, ch_out_permutation_test, ch_out_hierarchical_bootstrapping, ch_out_scvi, ch_out_dream, ch_out_ttest)
+        ch_combined = ch_out_mast.mix(ch_out_distinct, ch_out_deseq2, ch_out_permutation_test, ch_out_hierarchical_bootstrapping, ch_out_scvi, ch_out_dream, ch_out_scdd, ch_out_ttest)
             .map{meta -> [(meta.scenario + meta.n_cells + meta.n_genes + meta.run).join('_'), meta]}
             .groupTuple()
             .map{key, meta -> meta.flatten().sum()}
