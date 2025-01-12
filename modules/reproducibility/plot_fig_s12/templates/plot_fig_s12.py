@@ -177,4 +177,4 @@ for method, label_list in method_groups.items():
         fontweight="bold"
     )
 
-g.savefig("Fig_SZ.png")
+g.savefig("Fig_S12.png")
