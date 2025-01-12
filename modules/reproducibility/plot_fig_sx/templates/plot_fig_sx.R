@@ -67,7 +67,7 @@ for (method in names(fixed_jaccards)) {
 
 color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "scdd", "ttest"), 
                          color = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
-                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999" "#000000"),
+                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#999999", "#000000"),
                          method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "scDD", "t-test"))
 
 boxplot_data\$Method <- factor(boxplot_data\$Method, levels = color.code\$method)
