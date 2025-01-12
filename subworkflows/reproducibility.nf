@@ -11,9 +11,9 @@ include { DREAM } from '../modules/performance/dream'
 include { SCDD } from '../modules/performance/scdd'
 include { TTEST } from '../modules/performance/ttest'
 include { PVALUES } from '../modules/performance/pvalues'
-include { PLOT_FIG_SX } from '../modules/reproducibility/plot_fig_sx'
-include { PLOT_FIG_SY } from '../modules/reproducibility/plot_fig_sy'
-include { PLOT_FIG_SZ } from '../modules/reproducibility/plot_fig_sz'
+include { PLOT_FIG_S10 } from '../modules/reproducibility/plot_fig_s10'
+include { PLOT_FIG_S11 } from '../modules/reproducibility/plot_fig_s11'
+include { PLOT_FIG_S12 } from '../modules/reproducibility/plot_fig_s12'
 
 workflow REPRODUCIBILITY {
     take:
@@ -61,9 +61,9 @@ workflow REPRODUCIBILITY {
             .map{meta, file -> file}
             .collect()
 
-        PLOT_FIG_SX(ch_figs)
+        PLOT_FIG_S10(ch_figs)
 
-        PLOT_FIG_SY(ch_figs)
+        PLOT_FIG_S11(ch_figs)
 
-        PLOT_FIG_SZ(ch_figs)
+        PLOT_FIG_S12(ch_figs)
 }

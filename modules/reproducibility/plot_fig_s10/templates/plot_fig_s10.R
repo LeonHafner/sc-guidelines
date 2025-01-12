@@ -79,4 +79,4 @@ p <- ggplot(boxplot_data, aes(x = Method, y = Jaccard, fill=Method)) +
   theme_cowplot() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave(p, filename = "Fig_SX.png", width = 2048, height = 1500, units = "px")
+ggsave(p, filename = "Fig_S10.png", width = 2048, height = 1500, units = "px")

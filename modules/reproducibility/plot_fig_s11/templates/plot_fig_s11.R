@@ -85,4 +85,4 @@ p <- ggplot(line_df, aes(x = N, y = Avg_Jaccard, color = Method)) +
   theme(legend.position = "right") +
   theme_cowplot()
 
-ggsave(p, filename = "Fig_SY.png", width = 2048, height = 1800, units = "px")  
+ggsave(p, filename = "Fig_S11.png", width = 2048, height = 1800, units = "px")  
