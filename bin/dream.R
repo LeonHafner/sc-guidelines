@@ -56,6 +56,8 @@ if (scenario %in% c("atlas", "atlas_hvg", "atlas-less-de")) {
   form <- ~ Condition
 } else if (scenario == "dataset-ub-cells_pb-fixed-effect") {
   form <- ~ Condition + log.n_obs
+} else if (scenario == "luca") {
+  form <- ~ Condition
 }
 
 vobjDream <- voomWithDreamWeights(dge, form, colData(data))

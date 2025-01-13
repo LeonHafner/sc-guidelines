@@ -63,6 +63,11 @@ elif scenario in ["dataset-ub-cells", "dataset-ub-cells_hvg", "dataset-ub-cells-
         adata,
         categorical_covariate_keys=["Sample"],
     )
+elif scenario == "luca":
+    scvi.model.SCVI.setup_anndata(
+        adata,
+        categorical_covariate_keys=["Sample"],
+    )
 
 model = scvi.model.SCVI(adata)
 
@@ -76,8 +81,12 @@ print(f'Using batch size of {batch_size}')
 
 model.train(batch_size=batch_size)
 
-group1 = "Condition1"
-group2 = "Condition2"
+if scenario == "luca":
+    group1 = "lung_adenocarcinoma"
+    group2 = "squamous_cell_lung_carcinoma"
+else:
+    group1 = "Condition1"
+    group2 = "Condition2"
 
 de = model.differential_expression(
     groupby="Condition",

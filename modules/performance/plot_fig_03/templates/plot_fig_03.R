@@ -49,11 +49,12 @@ for (scenario in c("atlas", "atlas-ub-conditions", "dataset", "dataset-ub-cells"
 
 df <- df[method != "distinct"]
 
-color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi"), 
-                         color = c(1:6), 
-                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00"),
-                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI"))
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"), 
+                         color = c(1, 2, 3, 4, 5, 6, 7, 9),
+                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"),
+                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "t-test"))
 
+color.code <- color.code[method != "distinct"]
 
 # Atlas
 df.atlas <- df[scenario == "atlas"]

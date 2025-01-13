@@ -11,9 +11,10 @@ data.real <- fread("${plotting_data_kang}")
 data.sim <- melt(data.sim, id.vars = "pvals", variable.name = "method", value.name = "fpr")
 data.real <- melt(data.real, id.vars = "pvals", variable.name = "method", value.name = "fpr")
 
-color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct"), 
-                        color = c(1:7), 
-                        method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct"))
+color.code <- data.table(method = c("deseq2", "dream", "hierarchical-bootstrapping", "mast", "permutation-test", "scvi", "distinct", "ttest"), 
+                         color = c(1, 2, 3, 4, 5, 6, 7, 9),
+                         hex = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"),
+                         method_legend = c("DESeq2", "DREAM", "Hierarchical\nBootstrapping", "MAST", "Permutation\nTest", "scVI", "distinct", "t-test"))
 
 
 # Factorize methods to get the same color across all plots
@@ -25,6 +26,7 @@ data.real\$method <- factor(data.real\$method, levels = color.code\$method)
 data.real <- na.omit(data.real)
 data.real <- data.real[method != "distinct"]
 
+color.code <- color.code[method != "distinct"]
 
 p.sim <- ggplot(data.sim, aes(x = pvals, y = fpr, color = method)) +
 geom_line(linewidth = 1) +

@@ -72,6 +72,10 @@ if (scenario %in% c("atlas", "atlas_hvg", "atlas-less-de")) {
   dds <- DESeqDataSetFromMatrix(countData = counts,
                                 colData = colData,
                                 design = ~ log.n_obs + Condition)
+} else if (scenario == "luca") {
+  dds <- DESeqDataSetFromMatrix(countData = counts,
+                                colData = colData,
+                                design = ~ Condition)
 }
 
 

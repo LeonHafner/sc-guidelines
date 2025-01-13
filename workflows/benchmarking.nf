@@ -3,6 +3,7 @@ include { STATIC_PLOTS } from '../subworkflows/static_plots'
 include { CORRELATION } from '../subworkflows/correlation'
 include { NEGATIVE } from '../subworkflows/negative'
 include { PERFORMANCE } from '../subworkflows/performance'
+include { REPRODUCIBILITY } from '../subworkflows/reproducibility'
 
 
 workflow BENCHMARKING {
@@ -31,6 +32,10 @@ workflow BENCHMARKING {
         performance_n_genes
         performance_hvg_ratio
         performance_preprocessing_threshold
+
+        reproducibility_enabled
+        reproducibility_lung_cancer_atlas
+        reproducibility_preprocessing_threshold
         
     main:
         if (runtime_enabled) {
@@ -71,5 +76,11 @@ workflow BENCHMARKING {
                 performance_preprocessing_threshold,
             )
         }
-        
+
+        if (reproducibility_enabled) {
+            REPRODUCIBILITY(
+                reproducibility_lung_cancer_atlas,
+                reproducibility_preprocessing_threshold
+            )
+        }
 }
