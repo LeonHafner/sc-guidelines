@@ -24,7 +24,7 @@ for meta, path in zip(meta_string.split(';'), path_string.split(';')):
 
     method = meta['method']
     match method:
-        case 'hierarchical-bootstrapping' | 'permutation-test' | 'deseq2' | 'ttest' | 'scdd':
+        case 'hierarchical-bootstrapping' | 'permutation-test' | 'deseq2' | 'ttest':
             res = pd.read_csv(path, sep='\\t', index_col=0)['pvalue']
         case 'distinct':
             res = pd.read_csv(path, sep='\\t', index_col=0)['p_val'].rename('pvalue')
